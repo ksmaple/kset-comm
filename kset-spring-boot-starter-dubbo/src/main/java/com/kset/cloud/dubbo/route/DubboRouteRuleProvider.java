@@ -1,0 +1,38 @@
+package com.kset.cloud.dubbo.route;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kset.cloud.spi.CloudRuleProvider;
+import com.kset.cloud.spi.CloudRuleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Dubbo 路由规则 Nacos 变更处理器
+ */
+public class DubboRouteRuleProvider implements CloudRuleProvider {
+
+    private static final Logger log = LoggerFactory.getLogger(DubboRouteRuleProvider.class);
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public CloudRuleType ruleType() {
+        return CloudRuleType.DUBBO_ROUTE;
+    }
+
+    @Override
+    public void onRuleChanged(String jsonContent) {
+        if (jsonContent == null || jsonContent.isBlank()) {
+            DubboRouteRuleHolder.update(null);
+            return;
+        }
+        try {
+            DubboRouteRuleHolder.RouteRuleConfig config =
+                    objectMapper.readValue(jsonContent, DubboRouteRuleHolder.RouteRuleConfig.class);
+            DubboRouteRuleHolder.update(config.getConditions());
+            log.info("Dubbo route rules updated, conditions={}", config.getConditions().size());
+        } catch (Exception e) {
+            log.warn("Failed to parse Dubbo route rules: {}", e.getMessage());
+        }
+    }
+}
