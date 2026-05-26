@@ -1,6 +1,6 @@
 package com.kset.cloud.trace;
 
-import com.kset.core.trace.TraceHeaders;
+import com.kset.common.trace.TraceHeaders;
 import org.slf4j.MDC;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;

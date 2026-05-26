@@ -1,1 +1,1 @@
-com.kset.boot.redis.autoconfigure.KsetRedisAutoConfiguration
+com.kset.redis.autoconfigure.KsetRedisAutoConfiguration

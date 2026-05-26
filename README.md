@@ -1,11 +1,11 @@
-# kset-boot
+﻿# kset-comm
 
 KSet Spring Boot 公共框架 — 统一版本管理、按能力拆分的 Starter、云服务规则定制层。
 
 ## 模块结构
 
 ```
-kset-boot/
+kset-comm/
 ├── kset-spring-boot-parent/              # 版本 BOM（Boot 3.4.5 / SC 2024 / SCA 2023 / Dubbo 3.3）
 ├── kset-common/                          # 公共工具（异常、日志、TraceId、加密）
 ├── kset-cloud/                           # 云服务规范（kset.cloud.*、SPI、TraceContext）
@@ -17,6 +17,24 @@ kset-boot/
 └── kset-spring-boot-starter-gateway/     # Spring Cloud Gateway + 动态路由 + Sentinel
 └── kset-demo/                            # 示例工程（user / order / gateway）
 ```
+
+## 包名与模块目录约定
+
+Java 包根路径与 Maven 模块目录一一对应（`src/main/java` 下目录即包路径）：
+
+| Maven 模块 | 包根路径 | 说明 |
+|------------|----------|------|
+| `kset-common` | `com.kset.common` | 公共工具、异常、日志、TraceId |
+| `kset-cloud` | `com.kset.cloud` | 云服务规范、SPI、共享配置与 Nacos 命名约定 |
+| `kset-spring-boot-starter-web` | `com.kset.web` | Web 自动配置与统一响应 |
+| `kset-spring-boot-starter-mysql` | `com.kset.mysql` | MyBatis-Plus / Flyway |
+| `kset-spring-boot-starter-redis` | `com.kset.redis` | Redis 模板与缓存 |
+| `kset-spring-boot-starter-nacos` | `com.kset.nacos` | Nacos / Sentinel 自动配置 |
+| `kset-spring-boot-starter-dubbo` | `com.kset.dubbo` | Dubbo 治理与路由 |
+| `kset-spring-boot-starter-gateway` | `com.kset.gateway` | Gateway 过滤器与动态路由 |
+| `kset-demo/*` | `com.kset.demo.*` | 示例应用 |
+
+跨模块依赖时，Starter 实现类引用 `kset-cloud` 中的共享 API（如 `com.kset.cloud.spi.CloudRuleProvider`、`com.kset.cloud.nacos.NacosConfigConvention`）。
 
 ## Starter 能力说明
 
@@ -218,7 +236,7 @@ dubbo:
 |-----|--------|------|
 | `CloudRuleProvider` | `com.kset.cloud.spi` | 自定义 Sentinel / Dubbo / Gateway 规则变更处理 |
 | `GrayTagResolver` | `com.kset.cloud.spi` | 自定义灰度标签解析（默认透传 Header） |
-| `GatewayAuthProvider` | `com.kset.cloud.gateway.spi` | Gateway JWT / Token 鉴权 |
+| `GatewayAuthProvider` | `com.kset.gateway.spi` | Gateway JWT / Token 鉴权 |
 
 ```java
 import com.kset.cloud.spi.CloudRuleProvider;

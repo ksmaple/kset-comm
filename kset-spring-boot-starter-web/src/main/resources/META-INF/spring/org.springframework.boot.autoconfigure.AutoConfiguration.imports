@@ -1,1 +1,1 @@
-com.kset.boot.web.autoconfigure.KsetWebAutoConfiguration
+com.kset.web.autoconfigure.KsetWebAutoConfiguration

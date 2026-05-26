@@ -1,2 +1,2 @@
-com.kset.cloud.gateway.autoconfigure.KsetGatewayAutoConfiguration
-com.kset.cloud.gateway.autoconfigure.KsetGatewayRouteListenerAutoConfiguration
+com.kset.gateway.autoconfigure.KsetGatewayAutoConfiguration
+com.kset.gateway.autoconfigure.KsetGatewayRouteListenerAutoConfiguration

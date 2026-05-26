@@ -1,1 +1,1 @@
-ksetTagRouterFactory=com.kset.cloud.dubbo.route.KsetTagRouterFactory
+ksetTagRouterFactory=com.kset.dubbo.route.KsetTagRouterFactory

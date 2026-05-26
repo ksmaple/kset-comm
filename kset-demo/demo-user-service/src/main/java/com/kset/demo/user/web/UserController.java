@@ -1,7 +1,7 @@
 package com.kset.demo.user.web;
 
-import com.kset.boot.web.response.ApiResponse;
-import com.kset.core.annotation.OpLog;
+import com.kset.web.response.ApiResponse;
+import com.kset.common.annotation.OpLog;
 import com.kset.demo.user.entity.UserEntity;
 import com.kset.demo.user.mapper.UserMapper;
 import org.springframework.web.bind.annotation.GetMapping;

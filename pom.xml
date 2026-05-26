@@ -6,12 +6,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kset</groupId>
-    <artifactId>kset-boot</artifactId>
+    <artifactId>kset-comm</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>kset-boot</name>
-    <description>KSet Spring Boot framework aggregator</description>
+    <name>kset-comm</name>
+    <description>KSet Spring Boot common framework aggregator</description>
 
     <modules>
         <module>kset-spring-boot-parent</module>

@@ -1,7 +1,7 @@
 package com.kset.demo.order.web;
 
-import com.kset.boot.web.response.ApiResponse;
-import com.kset.core.annotation.OpLog;
+import com.kset.web.response.ApiResponse;
+import com.kset.common.annotation.OpLog;
 import com.kset.demo.api.UserQueryService;
 import com.kset.demo.order.entity.OrderEntity;
 import com.kset.demo.order.mapper.OrderMapper;

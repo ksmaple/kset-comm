@@ -1,2 +1,2 @@
-com.kset.cloud.dubbo.autoconfigure.KsetDubboGovernanceAutoConfiguration
-com.kset.cloud.dubbo.autoconfigure.KsetDubboRouteBootstrapConfiguration
+com.kset.dubbo.autoconfigure.KsetDubboGovernanceAutoConfiguration
+com.kset.dubbo.autoconfigure.KsetDubboRouteBootstrapConfiguration
