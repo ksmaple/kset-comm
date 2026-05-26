@@ -22,21 +22,23 @@
 
     <properties>
         <java.version>21</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
-        <!-- KSet ?????? -->
+        <!-- KSet module versions -->
         <kset-common.version>1.0.0-SNAPSHOT</kset-common.version>
         <kset-cloud.version>1.0.0-SNAPSHOT</kset-cloud.version>
         <kset-spring-boot-starter.version>1.0.0-SNAPSHOT</kset-spring-boot-starter.version>
 
-        <!-- Spring Cloud / ????-->
+        <!-- Spring Cloud / Alibaba -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
         <dubbo.version>3.3.6</dubbo.version>
 
-        <!-- ????????-->
+        <!-- Third-party libraries -->
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <spring-ai.version>1.0.0</spring-ai.version>
         <spring-ai-alibaba-graph.version>1.0.0.2</spring-ai-alibaba-graph.version>
@@ -54,14 +56,33 @@
         <flexmark.version>0.64.8</flexmark.version>
         <flying-saucer.version>9.4.0</flying-saucer.version>
         <poi.version>5.3.0</poi.version>
+        <xmlbeans.version>5.2.1</xmlbeans.version>
+        <commons-compress.version>1.26.2</commons-compress.version>
+        <bouncycastle.version>1.78.1</bouncycastle.version>
+        <protobuf-java.version>3.25.8</protobuf-java.version>
         <aliyun-oss.version>3.17.4</aliyun-oss.version>
         <logstash-encoder.version>8.0</logstash-encoder.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+
+        <!-- JSON / utilities / HTTP (common third-party) -->
+        <fastjson2.version>2.0.53</fastjson2.version>
+        <hutool.version>5.8.34</hutool.version>
+        <guava.version>33.4.0-jre</guava.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-io.version>2.18.0</commons-io.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-codec.version>1.17.1</commons-codec.version>
+        <okhttp.version>4.12.0</okhttp.version>
+        <caffeine.version>3.2.0</caffeine.version>
+        <jjwt.version>0.12.6</jjwt.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
+        <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
+        <ip2region.version>2.7.0</ip2region.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- KSet ???? -->
+            <!-- KSet modules -->
             <dependency>
                 <groupId>com.kset</groupId>
                 <artifactId>kset-common</artifactId>
@@ -250,14 +271,56 @@
                 <version>${flying-saucer.version}</version>
             </dependency>
 
-            <!-- Apache POI -->
+            <!-- Apache POI (aligned with EasyExcel / Tika; overrides transitive 5.2.x) -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-lite</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>${xmlbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
 
-            <!-- ????OSS -->
+            <!-- Crypto / encoding (BouncyCastle, Protobuf) -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
+            </dependency>
+
+            <!-- Aliyun OSS -->
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
@@ -269,6 +332,116 @@
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash-encoder.version}</version>
+            </dependency>
+
+            <!-- Fastjson2 (use fastjson2, not legacy fastjson 1.x) -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2-extension-spring6</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+
+            <!-- Hutool -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- Guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- Apache Commons -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+
+            <!-- OkHttp -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp-sse</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
+            <!-- Caffeine -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+
+            <!-- JWT (JJWT) -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- EasyExcel -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
+            <!-- Alibaba TTL (async / thread-pool context propagation) -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
+            </dependency>
+
+            <!-- IP region lookup -->
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${ip2region.version}</version>
             </dependency>
 
             <!-- Spring AI Alibaba Graph -->
@@ -292,9 +465,9 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <executable>${java.home}/bin/javac</executable>
+                        <release>${java.version}</release>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <parameters>${maven.compiler.parameters}</parameters>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
@@ -314,7 +487,52 @@
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <argLine>-Dfile.encoding=UTF-8</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-java-and-encoding</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireJavaVersion>
+                                        <version>[21,22)</version>
+                                        <message>Project requires JDK 21.</message>
+                                    </requireJavaVersion>
+                                    <requireMavenVersion>
+                                        <version>[3.9.0,)</version>
+                                        <message>Project requires Maven 3.9+.</message>
+                                    </requireMavenVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 </project>

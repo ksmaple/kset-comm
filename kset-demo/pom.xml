@@ -13,7 +13,6 @@
     </parent>
 
     <artifactId>kset-demo</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>kset-demo</name>
     <description>KSet framework demo applications</description>
