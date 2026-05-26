@@ -1,0 +1,45 @@
+# KSet Spring Boot 公共框架（kset-comm）项目专属规范
+
+> init 生成。优先级：本文档 > `.claude/skills/kaka-coder-designer/references/`。
+
+**proj**：`kset-comm` · **框架库（Spring Boot Starter 聚合仓）** · 生成：2026-05-24
+
+## 1. 画像
+
+- coder / fixer：`kset-comm-coder`、`kset-comm-fixer`
+- 技术栈：Java 21、Spring Boot 3.4.5、Spring Cloud 2024、MyBatis-Plus、Dubbo、Nacos、Redis、Gateway trace；Maven 多模块（`kset-common`、`kset-cloud`、`kset-spring-boot-starter-*`、`kset-demo`）
+- 包名：`com.kset.*`（demo 为 `com.kset.demo.*`）
+- SQL：MySQL（见 `.claude/sql-dialect.json`）；实体以 MyBatis-Plus 注解为主
+- API：REST + `ApiResponse`（`code` / `message` / `data`），非平台默认 Full POST + `ApiResult`
+
+## 2. 规范整合（对应 kaka-coder-designer 各域）
+
+| 主题 | 状态 | 实际做法 | 域路径 |
+|------|------|----------|--------|
+| Naming | 部分整合 | Java 驼峰；表/字段 demo 用 `createTime`/`deleted`（非 `created_at`） | references/naming-spec.md |
+| DDD | 不适用 | Starter/工具库为主；demo 为 Entity + Mapper，无 domain/application 分层 | references/ddd-spec.md |
+| API | 需调整 | `@GetMapping`/`@PostMapping`、路径参数；统一 `ApiResponse` | references/api-spec.md |
+| Frontend | 待生成 | 本仓无前端 | references/frontend-spec.md |
+| SQL | 部分整合 | MyBatis-Plus、`@TableLogic`、`IdType.AUTO`；方言 MySQL | references/sql-spec.md |
+| Conversion | 不适用 | 无 MapStruct DTO 层；以 PO/Entity 与配置类为主 | references/conversion-spec.md |
+| Event | 按需 | 部分能力在 starter 中（按模块阅读） | references/event-spec.md |
+| Cache | 部分整合 | Redis starter；按模块配置 | references/cache-spec.md |
+| Orchestration | 部分整合 | Dubbo、Gateway、Nacos 等云原生组件 | references/orchestration-spec.md |
+| Log | 已整合 | SLF4J+Logback+logstash-encoder；`@Slf4j`+`LogUtil`；TraceId/MDC 见 cloud/starter | references/log-spec.md |
+| Engineering | 按需 | 熔断/容量等见 starter 与 cloud 模块 | references/engineering-spec.md |
+
+## 3. 差异项
+
+- **API**：禁止将 demo/对外 HTTP 改为「全 POST + ApiResult」；保持 REST 动词与 `com.kset.common.web.ApiResponse`。
+- **DDD**：新增 starter 或 common 能力时不强制四层 DDD；`kset-demo` 仅作集成示例，保持轻量分层。
+- **模块边界**：公共能力进 `kset-common` / `kset-spring-boot-starter-*`；云相关进 `kset-cloud`；示例仅放 `kset-demo`。
+- **版本**：子模块版本由根 `kset-spring-boot-parent` / `kset-comm` BOM 统一管理，勿在子模块随意覆盖 Spring Boot 主版本。
+- **规范来源**：仅引用本仓 `.claude/skills/`，禁止写死平台仓 `kset-developer` 绝对路径。
+- **日志**：`@Slf4j` 声明 Logger；结构化用 **`StructLog.of(X.class)` 绑定一次**；脱敏用 `LogMaskingUtil`；统一 logback 在 `kset-common`（见 log-spec L012–L013）。
+
+## 4. 命令
+
+| 用途 | 命令 |
+|------|------|
+| 编译 | `mvn -q -DskipTests compile`（仓库根目录） |
+| 测试 | `mvn -q test`（仓库根目录；可按模块 `-pl` 缩小范围） |

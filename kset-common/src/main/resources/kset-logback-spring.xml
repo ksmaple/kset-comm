@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
+    <springProperty scope="context" name="ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+
+    <!-- 生产 / 预发：结构化 JSON（log-spec L002） -->
+    <springProfile name="prod,staging">
+        <appender name="KSET_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <fieldName>timestamp</fieldName>
+                        <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSX</pattern>
+                    </timestamp>
+                    <logLevel>
+                        <fieldName>level</fieldName>
+                    </logLevel>
+                    <loggerName>
+                        <fieldName>logger</fieldName>
+                        <shortenedLoggerNameLength>36</shortenedLoggerNameLength>
+                    </loggerName>
+                    <message/>
+                    <mdc>
+                        <includeMdcKeyName>traceId</includeMdcKeyName>
+                        <includeMdcKeyName>spanId</includeMdcKeyName>
+                        <includeMdcKeyName>grayTag</includeMdcKeyName>
+                    </mdc>
+                    <arguments/>
+                    <stackTrace/>
+                    <pattern>
+                        <pattern>
+                            {
+                            "app":"${APP_NAME}"
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+        </appender>
+        <root level="${ROOT_LEVEL}">
+            <appender-ref ref="KSET_CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 默认 / 本地 / 测试：可读文本，保留 traceId -->
+    <springProfile name="!prod &amp; !staging">
+        <appender name="KSET_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId:-}] %-5level %logger{36} - %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+        <root level="${ROOT_LEVEL}">
+            <appender-ref ref="KSET_CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>

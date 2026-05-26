@@ -19,8 +19,7 @@ import com.kset.gateway.route.GatewayRouteRuleProvider;
 import com.kset.cloud.nacos.NacosConfigConvention;
 import com.kset.cloud.loadbalancer.KsetGrayLoadBalancerConfiguration;
 import com.kset.cloud.spi.GrayTagResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -55,9 +54,8 @@ import java.util.Set;
 @EnableConfigurationProperties(KsetCloudProperties.class)
 @LoadBalancerClients(defaultConfiguration = KsetGrayLoadBalancerConfiguration.class)
 @Import(KsetGrayLoadBalancerConfiguration.class)
+@Slf4j
 public class KsetGatewayAutoConfiguration {
-
-    private static final Logger log = LoggerFactory.getLogger(KsetGatewayAutoConfiguration.class);
 
     @Bean
     public GlobalFilter traceIdGatewayFilter(KsetCloudProperties properties) {

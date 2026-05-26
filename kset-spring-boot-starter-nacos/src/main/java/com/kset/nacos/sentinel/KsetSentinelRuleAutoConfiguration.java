@@ -14,8 +14,7 @@ import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.cloud.nacos.NacosConfigConvention;
 import com.kset.cloud.spi.CloudRuleProvider;
 import com.kset.cloud.spi.CloudRuleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -28,9 +27,9 @@ import java.util.List;
 @AutoConfiguration
 @ConditionalOnClass({FlowRuleManager.class, NacosDataSource.class})
 @ConditionalOnProperty(prefix = "kset.cloud.sentinel", name = "enabled", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class KsetSentinelRuleAutoConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(KsetSentinelRuleAutoConfiguration.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Bean

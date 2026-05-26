@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kset.cloud.spi.CloudRuleProvider;
 import com.kset.cloud.spi.CloudRuleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
@@ -24,9 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Gateway 动态路由规则处理器（diff 刷新，删除已下线路由）。
  */
+@Slf4j
 public class GatewayRouteRuleProvider implements CloudRuleProvider {
-
-    private static final Logger log = LoggerFactory.getLogger(GatewayRouteRuleProvider.class);
 
     private final RouteDefinitionWriter routeDefinitionWriter;
     private final ApplicationEventPublisher eventPublisher;

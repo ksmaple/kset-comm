@@ -2,8 +2,7 @@ package com.kset.nacos.autoconfigure;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.cloud.nacos.NacosConfigConvention;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,9 +17,8 @@ import java.util.Map;
 @AutoConfiguration
 @ConditionalOnClass(name = "com.alibaba.cloud.nacos.NacosConfigAutoConfiguration")
 @EnableConfigurationProperties(KsetCloudProperties.class)
+@Slf4j
 public class KsetNacosConventionAutoConfiguration {
-
-    private static final Logger log = LoggerFactory.getLogger(KsetNacosConventionAutoConfiguration.class);
 
     @Bean
     public KsetNacosConventionInitializer ksetNacosConventionInitializer(Environment environment,

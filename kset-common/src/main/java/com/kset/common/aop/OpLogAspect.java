@@ -3,15 +3,14 @@ package com.kset.common.aop;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kset.common.annotation.OpLog;
 import com.kset.common.logging.LogMaskingUtil;
-import com.kset.common.logging.LogUtil;
+import com.kset.common.logging.StructLog;
 import com.kset.common.logging.OpLogContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -27,9 +26,11 @@ import java.lang.reflect.Method;
  * {@link OpLog} 操作日志切面。
  */
 @Aspect
+@Slf4j
 public class OpLogAspect {
 
-    private static final Logger log = LoggerFactory.getLogger(OpLogAspect.class);
+    private static final StructLog OP_LOG = StructLog.of(OpLogAspect.class);
+
     private static final ExpressionParser PARSER = new SpelExpressionParser();
     private static final DefaultParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -85,7 +86,7 @@ public class OpLogAspect {
         String operator = OpLogContext.getOperator();
 
         if (error != null) {
-            LogUtil.error(log, "operation log",
+            OP_LOG.error("operation log",
                     "type", opLog.type(),
                     "target", opLog.target(),
                     "targetId", targetId,
@@ -95,7 +96,7 @@ public class OpLogAspect {
                     "costMs", costMs,
                     "error", error.getMessage());
         } else {
-            LogUtil.info(log, "operation log",
+            OP_LOG.info("operation log",
                     "type", opLog.type(),
                     "target", opLog.target(),
                     "targetId", targetId,

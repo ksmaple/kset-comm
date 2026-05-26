@@ -72,6 +72,31 @@ kset:
     key-prefix: "myapp:"
 ```
 
+> 单机场景**不要**引入 `starter-nacos`、`starter-dubbo`、`starter-gateway`，本地 Redis/数据源写在 `application.yaml` 即可。
+
+### 日志（无需自建 logback）
+
+依赖任意 KSet Starter（经 `kset-common` 传递）后，框架自动启用 `classpath:kset-logback-spring.xml`：
+
+| Profile | 输出 |
+|---------|------|
+| 默认 / 本地 / `dev` | 文本控制台，含 `[traceId]` |
+| `prod` / `staging` | JSON（level、traceId、logger、message、timestamp） |
+
+- **不要**在业务工程再复制 `logback-spring.xml`。
+- 完全自定义：设置 `logging.config=classpath:your-logback.xml`。
+- 关闭框架默认：`kset.logging.auto-config=false`（此时使用 Spring Boot 默认 logback 发现逻辑）。
+
+```yaml
+spring:
+  profiles:
+    active: dev   # 本地可读日志；生产请用 prod
+logging:
+  level:
+    root: INFO
+    com.kset: DEBUG
+```
+
 ### 运行示例工程
 
 ```bash

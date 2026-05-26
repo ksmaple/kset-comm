@@ -6,8 +6,7 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.gateway.route.GatewayRouteRuleProvider;
 import com.kset.cloud.nacos.NacosConfigConvention;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -30,9 +29,8 @@ public class KsetGatewayRouteListenerAutoConfiguration {
         return new GatewayRouteNacosListener(configServiceProvider, routeRuleProvider, properties, convention, environment);
     }
 
+    @Slf4j
     static class GatewayRouteNacosListener {
-
-        private static final Logger log = LoggerFactory.getLogger(GatewayRouteNacosListener.class);
 
         GatewayRouteNacosListener(ObjectProvider<ConfigService> configServiceProvider,
                                   GatewayRouteRuleProvider routeRuleProvider,

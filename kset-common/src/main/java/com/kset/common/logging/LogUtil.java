@@ -5,32 +5,20 @@ import org.slf4j.Logger;
 import static net.logstash.logback.argument.StructuredArguments.keyValue;
 
 /**
- * 结构化日志工具类。
+ * 结构化日志底层工具（logstash {@link net.logstash.logback.argument.StructuredArguments}）。
  *
- * <p>对 {@link net.logstash.logback.argument.StructuredArguments#keyValue}
- * 做薄封装，简化调用方代码：
+ * <p><b>业务代码优先使用 {@link StructLog}</b>，在类内绑定一次 Logger：</p>
  *
  * <pre>{@code
- * LogUtil.info(log, "Document uploaded",
- *     "documentId", docId,
- *     "folderId", folderId,
- *     "sizeBytes", size);
+ * private static final StructLog LOG = StructLog.of(OrderService.class);
+ * LOG.info("order created", "orderId", order.getId());
  * }</pre>
  *
- * <p>输出 JSON 示例：
- * <pre>{@code
- * {
- *   "message": "Document uploaded",
- *   "arguments": {
- *     "documentId": 123,
- *     "folderId": 456,
- *     "sizeBytes": 1024
- *   }
- * }
- * }</pre>
+ * <p>本类静态方法适用于无法持有 {@link StructLog} 字段的场景（如一次性工具方法、
+ * 已持有外部传入 {@link Logger} 的库代码）。</p>
  *
  * <p>对于纯文本 Appender（dev/test 控制台），参数以 {@code key=value} 形式附加在 message 之后，
- * 保证可读性不受损失。
+ * 保证可读性不受损失。</p>
  */
 public final class LogUtil {
 
@@ -76,7 +64,7 @@ public final class LogUtil {
         }
     }
 
-    private static Object[] toArgs(Object... kvs) {
+    static Object[] toArgs(Object... kvs) {
         if (kvs == null || kvs.length == 0) {
             return new Object[0];
         }

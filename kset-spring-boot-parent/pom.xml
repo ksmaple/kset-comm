@@ -453,6 +453,15 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- 子模块统一继承 Lombok（@Slf4j 等），optional 不传递下游应用 -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>

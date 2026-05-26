@@ -3,15 +3,13 @@ package com.kset.dubbo.route;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kset.cloud.spi.CloudRuleProvider;
 import com.kset.cloud.spi.CloudRuleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Dubbo 路由规则 Nacos 变更处理器
  */
+@Slf4j
 public class DubboRouteRuleProvider implements CloudRuleProvider {
-
-    private static final Logger log = LoggerFactory.getLogger(DubboRouteRuleProvider.class);
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
