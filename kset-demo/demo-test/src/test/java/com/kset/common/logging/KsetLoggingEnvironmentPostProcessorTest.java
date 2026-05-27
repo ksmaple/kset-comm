@@ -17,6 +17,23 @@ class KsetLoggingEnvironmentPostProcessorTest {
         processor.postProcessEnvironment(environment, new SpringApplication(Object.class));
         assertThat(environment.getProperty("logging.config"))
                 .isEqualTo("classpath:kset-logback-spring.xml");
+        assertThat(environment.getProperty("spring.profiles.default")).isEqualTo("dev");
+    }
+
+    @Test
+    void respectsExistingActiveProfile() {
+        MockEnvironment environment = new MockEnvironment();
+        environment.setProperty("spring.profiles.active", "prod");
+        processor.postProcessEnvironment(environment, new SpringApplication(Object.class));
+        assertThat(environment.getProperty("spring.profiles.default")).isNull();
+    }
+
+    @Test
+    void respectsExistingDefaultProfile() {
+        MockEnvironment environment = new MockEnvironment();
+        environment.setProperty("spring.profiles.default", "test");
+        processor.postProcessEnvironment(environment, new SpringApplication(Object.class));
+        assertThat(environment.getProperty("spring.profiles.default")).isEqualTo("test");
     }
 
     @Test

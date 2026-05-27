@@ -7,16 +7,18 @@
 
     <parent>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-parent</artifactId>
+        <artifactId>kset-demo</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../kset-spring-boot-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>kset-spring-boot-starter-redis</artifactId>
+    <artifactId>demo-test</artifactId>
     <packaging>jar</packaging>
+    <name>demo-test</name>
+    <description>KSet 框架统一测试模块（各 starter / common / cloud 单元测试集中于此）</description>
 
-    <name>kset-spring-boot-starter-redis</name>
-    <description>KSet Redis starter - Spring Data Redis (Lettuce)</description>
+    <properties>
+        <kset.skipModuleTests>false</kset.skipModuleTests>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -28,17 +30,16 @@
             <artifactId>kset-cloud</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <groupId>com.kset</groupId>
+            <artifactId>kset-spring-boot-starter-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
+            <groupId>com.kset</groupId>
+            <artifactId>kset-spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

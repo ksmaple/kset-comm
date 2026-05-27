@@ -19,6 +19,12 @@
     <description>KSet Gateway starter - SCG, dynamic routes, Sentinel, TraceId/gray</description>
 
     <dependencies>
+        <!-- 与 parent 一致；显式声明便于 IDE 识别 @Slf4j（parent 已 provided，此处不传递下游） -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.kset</groupId>
             <artifactId>kset-common</artifactId>
@@ -56,10 +62,6 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
 

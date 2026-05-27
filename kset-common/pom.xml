@@ -19,20 +19,18 @@
     <description>KSet common utilities - exceptions, logging, crypto, helpers</description>
 
     <dependencies>
-        <!-- Spring Boot Starter (provides @Value, @Component, etc.) -->
+        <!-- Spring Boot core (@Component, EnvironmentPostProcessor) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Web (Filter, Servlet) -->
+        <!-- Web / AOP / SpEL: optional; enable TraceIdFilter and OpLogAspect -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- AOP -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -43,62 +41,51 @@
             <artifactId>spring-expression</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <optional>true</optional>
-        </dependency>
 
-        <!-- Validation -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Jackson -->
+        <!-- JSON: Jackson for in-module code; Fastjson2 BOM entry for downstream -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-
-        <!-- HTTP / ????date ?? java.time?thread / http / random / sign? -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
         </dependency>
+
+        <!-- Utilities: declare once here; starters must not redeclare (project-spec) -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <!-- SLF4J / Logback -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
         </dependency>
 
-        <!-- Logstash Encoder (structured logging, kset-logback-spring.xml) -->
+        <!-- Structured logging (kset-logback-spring.xml) -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-        </dependency>
-
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

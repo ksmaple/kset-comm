@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ class KsetRedisTemplateOperationsTest {
 
     @Test
     void multiGetReturnsMapAlignedWithKeys() {
-        when(valueOps.multiGet(List.of("a", "b"))).thenReturn(List.of("1", null));
+        when(valueOps.multiGet(List.of("a", "b"))).thenReturn(Arrays.asList("1", null));
         Map<String, String> map = operations.multiGet(List.of("a", "b"), String.class);
         assertEquals("1", map.get("a"));
         assertEquals(null, map.get("b"));

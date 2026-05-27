@@ -9,7 +9,7 @@ class KsetRedisKeysTest {
 
     @Test
     void joinSegmentsWithColon() {
-        assertEquals("myapp:cache:user:1001",
+        assertEquals("myapp:cache:user:profile:1001",
                 KsetRedisKeys.cache("myapp", "user", "profile", "1001"));
     }
 

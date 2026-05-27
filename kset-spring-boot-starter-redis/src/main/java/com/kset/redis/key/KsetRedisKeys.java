@@ -161,7 +161,7 @@ public final class KsetRedisKeys {
         return String.join(String.valueOf(SEPARATOR), segments);
     }
 
-    static String requireSegment(String value, String name) {
+    public static String requireSegment(String value, String name) {
         validateSegment(value, name);
         return value.trim();
     }

@@ -21,6 +21,10 @@
     <dependencies>
         <dependency>
             <groupId>com.kset</groupId>
+            <artifactId>kset-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kset</groupId>
             <artifactId>kset-spring-boot-starter-nacos</artifactId>
         </dependency>
         <dependency>

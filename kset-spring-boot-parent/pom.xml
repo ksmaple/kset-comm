@@ -78,6 +78,9 @@
         <easyexcel.version>4.0.3</easyexcel.version>
         <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
         <ip2region.version>2.7.0</ip2region.version>
+
+        <!-- 框架库单元测试集中在 kset-demo/demo-test；库模块默认跳过 surefire -->
+        <kset.skipModuleTests>true</kset.skipModuleTests>
     </properties>
 
     <dependencyManagement>
@@ -358,7 +361,7 @@
                 <version>${guava.version}</version>
             </dependency>
 
-            <!-- Apache Commons -->
+            <!-- Apache Commons（框架内由 kset-common 统一引入；业务仓亦可按需声明） -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -446,12 +449,17 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- 子模块统一继承 Lombok（@Slf4j 等），optional 不传递下游应用 -->
+    <!-- 子模块统一继承：Lombok（@Slf4j 等）、测试栈（JUnit 5 / AssertJ / Mockito 等，版本由 Boot BOM 锁定） -->
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -500,6 +508,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
+                        <skipTests>${kset.skipModuleTests}</skipTests>
                         <argLine>-Dfile.encoding=UTF-8</argLine>
                     </configuration>
                 </plugin>

@@ -20,7 +20,9 @@ public class KsetLoggingEnvironmentPostProcessor implements EnvironmentPostProce
     static final String PROPERTY_SOURCE_NAME = "ksetLoggingDefaults";
     static final String AUTO_CONFIG_KEY = "kset.logging.auto-config";
     static final String LOGGING_CONFIG_KEY = "logging.config";
+    static final String PROFILES_DEFAULT_KEY = "spring.profiles.default";
     static final String DEFAULT_LOGGING_CONFIG = "classpath:kset-logback-spring.xml";
+    static final String DEFAULT_PROFILE = "dev";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -32,6 +34,10 @@ public class KsetLoggingEnvironmentPostProcessor implements EnvironmentPostProce
         }
         Map<String, Object> defaults = new LinkedHashMap<>();
         defaults.put(LOGGING_CONFIG_KEY, DEFAULT_LOGGING_CONFIG);
+        if (!environment.containsProperty(PROFILES_DEFAULT_KEY)
+                && !environment.containsProperty("spring.profiles.active")) {
+            defaults.put(PROFILES_DEFAULT_KEY, DEFAULT_PROFILE);
+        }
         environment.getPropertySources().addLast(new MapPropertySource(PROPERTY_SOURCE_NAME, defaults));
     }
 

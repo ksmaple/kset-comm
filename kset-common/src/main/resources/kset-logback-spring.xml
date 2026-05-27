@@ -3,57 +3,36 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
+    <springProperty scope="context" name="KSET_ENV" source="spring.profiles.active" defaultValue="dev"/>
     <springProperty scope="context" name="ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="LOG_BASE" source="kset.logging.file.base-dir" defaultValue="tmp/logs"/>
+    <springProperty scope="context" name="LOG_MAX_SIZE" source="kset.logging.file.max-size" defaultValue="100MB"/>
+    <springProperty scope="context" name="LOG_MAX_HISTORY" source="kset.logging.file.max-history" defaultValue="7"/>
 
-    <!-- 生产 / 预发：结构化 JSON（log-spec L002） -->
-    <springProfile name="prod,staging">
-        <appender name="KSET_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-                <providers>
-                    <timestamp>
-                        <fieldName>timestamp</fieldName>
-                        <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSX</pattern>
-                    </timestamp>
-                    <logLevel>
-                        <fieldName>level</fieldName>
-                    </logLevel>
-                    <loggerName>
-                        <fieldName>logger</fieldName>
-                        <shortenedLoggerNameLength>36</shortenedLoggerNameLength>
-                    </loggerName>
-                    <message/>
-                    <mdc>
-                        <includeMdcKeyName>traceId</includeMdcKeyName>
-                        <includeMdcKeyName>spanId</includeMdcKeyName>
-                        <includeMdcKeyName>grayTag</includeMdcKeyName>
-                    </mdc>
-                    <arguments/>
-                    <stackTrace/>
-                    <pattern>
-                        <pattern>
-                            {
-                            "app":"${APP_NAME}"
-                            }
-                        </pattern>
-                    </pattern>
-                </providers>
-            </encoder>
-        </appender>
+    <property name="LOG_PATH" value="${LOG_BASE}/${APP_NAME}"/>
+
+    <!-- dev：可读文本，仅控制台 -->
+    <appender name="KSET_TEXT_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId:-}] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <springProfile name="prod,test">
+        <include resource="kset-logback-file-appenders.xml"/>
+
         <root level="${ROOT_LEVEL}">
-            <appender-ref ref="KSET_CONSOLE"/>
+            <appender-ref ref="KSET_INFO_FILE"/>
+            <appender-ref ref="KSET_WARN_FILE"/>
+            <appender-ref ref="KSET_ERROR_FILE"/>
         </root>
     </springProfile>
 
-    <!-- 默认 / 本地 / 测试：可读文本，保留 traceId -->
-    <springProfile name="!prod &amp; !staging">
-        <appender name="KSET_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId:-}] %-5level %logger{36} - %msg%n</pattern>
-                <charset>UTF-8</charset>
-            </encoder>
-        </appender>
+    <springProfile name="dev,default">
+        <logger name="com.kset" level="DEBUG"/>
         <root level="${ROOT_LEVEL}">
-            <appender-ref ref="KSET_CONSOLE"/>
+            <appender-ref ref="KSET_TEXT_CONSOLE"/>
         </root>
     </springProfile>
 </configuration>
