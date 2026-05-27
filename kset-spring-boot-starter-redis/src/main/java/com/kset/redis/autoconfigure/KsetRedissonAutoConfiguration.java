@@ -1,0 +1,36 @@
+package com.kset.redis.autoconfigure;
+
+import com.kset.cloud.config.KsetRedisProperties;
+import com.kset.redis.config.KsetRedissonClientFactory;
+import com.kset.redis.core.KsetRedisTtlPolicy;
+import com.kset.redis.lock.internal.KsetRedissonLockProvider;
+import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+@AutoConfiguration
+@ConditionalOnClass(RedissonClient.class)
+@ConditionalOnProperty(prefix = "kset.redis.redisson", name = "enabled", havingValue = "true")
+@EnableConfigurationProperties(KsetRedisProperties.class)
+public class KsetRedissonAutoConfiguration {
+
+    @Bean(destroyMethod = "shutdown")
+    @ConditionalOnMissingBean(RedissonClient.class)
+    public RedissonClient ksetRedissonClient(RedisProperties springRedisProperties,
+                                             KsetRedisProperties ksetRedisProperties) {
+        return KsetRedissonClientFactory.createPrimary(springRedisProperties, ksetRedisProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KsetRedissonLockProvider ksetRedissonLockProvider(RedissonClient redissonClient,
+                                                             KsetRedisProperties ksetRedisProperties,
+                                                             KsetRedisTtlPolicy ttlPolicy) {
+        return new KsetRedissonLockProvider(redissonClient, ksetRedisProperties, ttlPolicy);
+    }
+}

@@ -15,7 +15,7 @@ public class KsetHttp {
 
     private KsetHttp() {
         Dispatcher dispatcher=new Dispatcher();
-        dispatcher.setMaxRequests(1000);
+        dispatcher.setMaxRequests(200);
         dispatcher.setMaxRequestsPerHost(1000);
         ConnectionPool connectionPool=new ConnectionPool(300,5,TimeUnit.MINUTES);
         okHttpClient = new OkHttpClient.Builder().dispatcher(dispatcher)

@@ -24,6 +24,9 @@ kset:
       enabled: true
   redis:
     key-prefix: "demo-standalone:"
+    default-ttl: 30m
+    redisson:
+      enabled: false
 
 knife4j:
   enable: true

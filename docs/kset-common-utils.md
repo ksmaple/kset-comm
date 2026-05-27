@@ -1,44 +1,111 @@
 # kset-common 工具类
 
-`kset-common` 模块提供与业务无关的通用能力，包根路径为 `com.kset.common`。以下三类工具由 bobo-common-utils 迁移而来，**日期时间统一使用 JDK `java.time`**（不依赖 Joda-Time）。
+`kset-common` 模块提供与业务无关的通用能力，包根路径为 `com.kset.common`。以下工具由 bobo-common-utils 迁移或在本仓新增，**日期时间统一使用 JDK `java.time`**（不依赖 Joda-Time）。
+
+## ListHelper（`com.kset.common.utils.collection`）
+
+列表分批、函数式转换、排序与空安全取用。日常单元素变换用 JDK Stream；IN 上限、Redis 分片、批量写库等用分批 API。
+
+| 场景 | 推荐 |
+|------|------|
+| `map` / `filter` / 复杂链式 | JDK Stream |
+| 分批查库 / RPC / Redis | `ListHelper.batchMap` / `forEachBatch` |
+| 按字段排序 | `ListHelper.sortBy` / `sortByDesc` |
+| 三方库 | Guava `Lists.partition` 可用，业务统一走 `ListHelper` |
+
+```java
+import com.kset.common.utils.collection.ListHelper;
+
+// 500 条一批查用户，结果顺序与 ids 一致
+List<User> users = ListHelper.batchMap(ids, 500, userRepo::findByIds);
+
+// 分批写 Redis
+ListHelper.forEachBatch(keys, 200, batch -> redisTemplate.opsForValue().multiSet(...));
+
+// 分组 / 去重 / 转 Map
+Map<String, List<Order>> byStatus = ListHelper.groupBy(orders, Order::getStatus);
+List<Order> unique = ListHelper.distinctBy(orders, Order::getOrderNo);
+
+// 排序（拷贝后排序，null key 升序时排最后）
+List<Order> sorted = ListHelper.sortByDesc(orders, Order::getCreateTime);
+
+// 空安全
+if (ListHelper.isNotEmpty(list)) { ... }
+```
 
 ## DateHelper（`com.kset.common.utils.date`）
 
-链式日期时间 API，内部为 `ZonedDateTime`。
+链式日期时间 API，内部为服务器本地 `LocalDateTime`（不做跨时区转换）。
 
 ```java
 import com.kset.common.utils.date.DateHelper;
-import java.time.ZoneId;
 
-// 格式化
-String s = DateHelper.build()
-        .withDateDef("2024-06-07 14:05:30")
-        .toyyyyMMddHHmmss();
+// 智能解析（自动识别常见格式）
+DateHelper.parse("2024-06-07 14:05:30");
+DateHelper.parse("2024-06-07");
+DateHelper.parse("20240607");
+DateHelper.parse("202406");
+DateHelper.parse("2024");
+DateHelper.of(existingDate);
 
-// 时区
-DateHelper.buildCN();                    // GMT+8
-DateHelper.buildSAU();                   // GMT+3
-DateHelper.build(ZoneId.of("UTC"));
+// 链式调整
+DateHelper.parse("2024-06-07").withTime("15:30:00").addDay(1);
 
 // 与 java.time 互转
-DateHelper.build().toLocalDateTime();
-DateHelper.build().toZonedDateTime();
+DateHelper.parse("2024-06-07").toLocalDateTime();
+DateHelper.parse("2024-06-07").toLocalDate();
 
-// 区间 [start, end) 左闭右开
-boolean ok = DateHelper.build().withDateDef("2024-01-01 12:00:00")
-        .isRange(start, end);
+// ── 左闭右闭 [start, end] ──
+DateHelper.parse("2024-01-01 12:00:00").isRange(start, end);
+DateHelper.rangeInclusive(start, end);
+DateHelper.thisMonthRangeInclusive();
 
-// 自然月 / ISO 周 / 年 / 季度边界
-DateHelper.DatePeriod month = DateHelper.thisMonthRange();
-DateHelper.DatePeriod week = DateHelper.build().weekRangeExclusive();
+// ── 左闭右开 [start, end)（SQL / 统计）──
+DateHelper.isInRangeExclusive(point, start, endExclusive);
+DateHelper.build().isRangeExclusive(start, endExclusive);
+DateHelper.rangeExclusive(start, endExclusive);
+DateHelper.thisMonthRange();
+DateHelper.DatePeriod month = DateHelper.build().monthRangeExclusive();
 ```
 
 | 迁移说明 | 原 Joda API | 现 API |
 |----------|-------------|--------|
-| 时区构造 | `build(DateTimeZone)` | `build(ZoneId)` / `build(TimeZone)` |
+| 时区构造 | `build(DateTimeZone)` | 见 `DateZoneHelper` |
 | 星期参数 | ISO 1=周一 … 7=周日 | 不变 |
 
-常用模式常量：`PATTERN_DEF`、`CN_GMT`、`SAU_GMT` 等见类定义。
+常用模式常量：`PATTERN_DEF` 等见类定义。
+
+## DateZone / DateZoneHelper（`com.kset.common.utils.date`）
+
+时区转换，支持人类习惯输入：整小时偏移、GMT/UTC 字符串、内置 {@link DateZone} 枚举。
+
+```java
+import com.kset.common.utils.date.DateZone;
+import com.kset.common.utils.date.DateZoneHelper;
+
+// 整小时偏移：8 → 东八区，-5 → 西五区
+DateZoneHelper.zoneOf(8);
+DateZoneHelper.parseZone("GMT+8");
+DateZoneHelper.parseZone("UTC+8");
+DateZoneHelper.parseZone("+8");
+DateZoneHelper.parseZone("CN");
+
+// 内置常见时区
+DateZone.CN.toZoneId();       // GMT+8
+DateZone.SAU.toGmtLabel();     // GMT+3
+DateZone.IN.toZoneId();        // GMT+05:30
+
+// 转换
+DateZoneHelper.of(epochMillis, 8).toZone(DateZone.SAU).format(DateHelper.PATTERN_DEF);
+DateZoneHelper.format(date, "GMT+8", DateHelper.PATTERN_DEF);
+
+// 墙钟 ⇄ 本地（同一时刻）
+DateHelper local = DateZoneHelper.wallClockToLocal(sauWall, DateZone.SAU);
+LocalDateTime cn = DateZoneHelper.localToWallClock(local, DateZone.CN);
+DateZoneHelper.sauToLocalDef("2024-06-07 10:00:00");  // 沙特快捷
+```
+
+内置枚举：`UTC`、`CN`、`SAU`、`JP`、`SG`、`UAE`、`IN`、`UK`、`US_EAST`、`US_WEST`（固定偏移，不含夏令时）。
 
 ## KsetHttp（`com.kset.common.utils.http`）
 

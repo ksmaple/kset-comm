@@ -13,6 +13,13 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass(name = "org.springframework.data.redis.core.RedisTemplate")
 @ConditionalOnProperty(prefix = "kset.redis", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(KsetRedisProperties.class)
-@Import({KsetRedisTemplateConfiguration.class, KsetCacheAutoConfiguration.class})
+@Import({
+        KsetRedisTemplateConfiguration.class,
+        KsetCacheAutoConfiguration.class,
+        KsetRedisServiceAutoConfiguration.class,
+        KsetRedisMultiSourceConfiguration.class,
+        KsetRedissonAutoConfiguration.class,
+        KsetRedisLockAutoConfiguration.class
+})
 public class KsetRedisAutoConfiguration {
 }

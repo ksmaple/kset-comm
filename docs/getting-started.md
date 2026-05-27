@@ -70,6 +70,47 @@ kset:
       enabled: true
   redis:
     key-prefix: "myapp:"
+    default-ttl: 30m
+```
+
+业务侧推荐注入 **`KsetRedisService`** 或使用静态 **`KsetRedis`**（见 [kset-redis.md](kset-redis.md)）。须配置 **`kset.redis.default-ttl`**（禁止永久 key）；可选 **`kset.redis.redisson.enabled=true`** 启用 Redisson 分布式锁。示例：
+
+```java
+redisService.setEx("user:" + id, user, Duration.ofMinutes(5));
+UserEntity cached = redisService.get("user:" + id, UserEntity.class);
+
+// 静态门面（Bootstrap 绑定后）
+KsetRedis.setEx("user:" + id, user, Duration.ofMinutes(5));
+
+// 命名数据源
+KsetRedis.of("cache").setEx("item:" + id, item, Duration.ofHours(1));
+```
+
+多数据源与集群（Primary 仍用 `spring.data.redis.*`）：
+
+```yaml
+spring:
+  data:
+    redis:
+      cluster:
+        nodes: redis-1:6379,redis-2:6379
+
+kset:
+  redis:
+    default-ttl: 30m
+    sources:
+      cache:
+        host: redis-cache
+        port: 6379
+        key-prefix: "myapp:cache:"
+```
+
+```java
+public class CacheWriter {
+    public CacheWriter(@Qualifier("cacheKsetRedisService") KsetRedisService cacheRedis) {
+        cacheRedis.setEx("k", value, Duration.ofMinutes(10));
+    }
+}
 ```
 
 > 单机场景**不要**引入 `starter-nacos`、`starter-dubbo`、`starter-gateway`，本地 Redis/数据源写在 `application.yaml` 即可。

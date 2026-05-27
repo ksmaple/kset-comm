@@ -1,0 +1,67 @@
+package com.kset.redis.autoconfigure;
+
+import com.kset.cloud.config.KsetRedisProperties;
+import com.kset.redis.lock.KsetRedisLockExecutor;
+import com.kset.redis.core.KsetRedisRegistry;
+import com.kset.redis.core.KsetRedisService;
+import com.kset.redis.core.KsetRedisStreamSettings;
+import com.kset.redis.core.KsetRedisTtlPolicy;
+import com.kset.redis.lock.internal.KsetRedissonLockProvider;
+import com.kset.redis.support.KsetRedisBootstrap;
+import com.kset.redis.support.KsetRedisNamedSources;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.core.RedisTemplate;
+
+@Configuration
+@ConditionalOnBean(RedisTemplate.class)
+public class KsetRedisServiceAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KsetRedisTtlPolicy ksetRedisTtlPolicy(KsetRedisProperties properties) {
+        return new KsetRedisTtlPolicy(properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KsetRedisStreamSettings ksetRedisStreamSettings(KsetRedisProperties properties) {
+        return new KsetRedisStreamSettings(properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KsetRedisRegistry ksetRedisRegistry() {
+        return new KsetRedisRegistry();
+    }
+
+    @Bean(name = {"ksetRedisService"})
+    @Primary
+    @ConditionalOnMissingBean(name = "ksetRedisService")
+    public KsetRedisService ksetRedisService(RedisTemplate<String, Object> redisTemplate,
+                                             KsetRedisTtlPolicy ttlPolicy,
+                                             KsetRedisStreamSettings streamSettings) {
+        return KsetRedisService.from(redisTemplate, ttlPolicy, streamSettings);
+    }
+
+    @Bean
+    @ConditionalOnBean(KsetRedissonLockProvider.class)
+    @ConditionalOnMissingBean
+    public KsetRedisLockExecutor ksetRedisLockExecutor(KsetRedissonLockProvider lockProvider,
+                                                       KsetRedisTtlPolicy ttlPolicy) {
+        return new KsetRedisLockExecutor(lockProvider, ttlPolicy);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KsetRedisBootstrap ksetRedisBootstrap(KsetRedisRegistry registry,
+                                                 KsetRedisService ksetRedisService,
+                                                 ObjectProvider<KsetRedisNamedSources> namedSources,
+                                                 ObjectProvider<KsetRedisLockExecutor> lockExecutor) {
+        return new KsetRedisBootstrap(registry, ksetRedisService, namedSources, lockExecutor);
+    }
+}
