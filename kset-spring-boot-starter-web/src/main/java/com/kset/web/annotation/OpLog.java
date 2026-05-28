@@ -1,4 +1,4 @@
-package com.kset.common.annotation;
+package com.kset.web.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,12 +8,12 @@ import java.lang.annotation.Target;
 /**
  * 操作日志注解
  *
- * <p>标记在 Controller 方法上，AOP 切面会自动记录操作日志。
+ * <p>标记在 Controller 方法上，由 starter-web 的 AOP 切面自动记录操作日志。
  *
  * <p>示例：
  * <pre>{@code
  * @OpLog(type = "CREATE", target = "document")
- * public ApiResult<IdResponse> create(@RequestBody CreateDocumentCommand command) { ... }
+ * public ApiResponse<IdResponse> create(@RequestBody CreateDocumentCommand command) { ... }
  * }</pre>
  */
 @Target(ElementType.METHOD)

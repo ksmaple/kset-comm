@@ -1,7 +1,5 @@
 package com.kset.dubbo.autoconfigure;
 
-import com.kset.cloud.config.KsetCloudProperties;
-import com.kset.dubbo.filter.DubboTraceFilter;
 import com.kset.dubbo.route.DubboRouteRuleProvider;
 import org.apache.dubbo.rpc.Filter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -13,11 +11,6 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass(Filter.class)
 @Import(DubboRouteRuleProvider.class)
 public class KsetDubboGovernanceAutoConfiguration {
-
-    @Bean
-    public Filter dubboTraceFilter(KsetCloudProperties properties) {
-        return new DubboTraceFilter(properties);
-    }
 
     @Bean
     public DubboRouteRuleProvider dubboRouteRuleProvider() {

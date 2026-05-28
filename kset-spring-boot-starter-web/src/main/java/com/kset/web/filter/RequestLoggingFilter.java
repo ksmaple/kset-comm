@@ -1,13 +1,12 @@
 package com.kset.web.filter;
 
 import com.kset.common.logging.LogMaskingUtil;
-import com.kset.common.trace.TraceHeaders;
+import com.kset.common.monitor.KsetMonitor;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -31,6 +30,9 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
             filterChain.doFilter(wrappedRequest, wrappedResponse);
         } finally {
             long cost = System.currentTimeMillis() - start;
+            if (cost >= 500) {
+                KsetMonitor.recordSlowEvent("http-request-log", cost, request.getMethod() + " " + request.getRequestURI());
+            }
             if (log.isDebugEnabled()) {
                 String body = new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8);
                 log.debug("HTTP {} {} status={} costMs={} traceId={} body={}",
@@ -38,7 +40,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
                         request.getRequestURI(),
                         wrappedResponse.getStatus(),
                         cost,
-                        MDC.get(TraceHeaders.TRACE_ID_KEY),
+                        KsetMonitor.currentTraceId().orElse(null),
                         LogMaskingUtil.maskText(body));
             }
             wrappedResponse.copyBodyToResponse();

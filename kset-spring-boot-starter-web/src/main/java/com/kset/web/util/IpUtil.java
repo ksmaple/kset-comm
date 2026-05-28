@@ -1,11 +1,11 @@
-package com.kset.common.web;
+package com.kset.web.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * HTTP 请求 IP 获取工具
  */
-public class IpUtil {
+public final class IpUtil {
 
     private IpUtil() {
     }

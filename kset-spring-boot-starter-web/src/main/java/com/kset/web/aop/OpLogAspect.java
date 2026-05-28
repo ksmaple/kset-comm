@@ -1,15 +1,16 @@
-package com.kset.common.aop;
+package com.kset.web.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kset.common.annotation.OpLog;
 import com.kset.common.logging.LogMaskingUtil;
-import com.kset.common.logging.StructLog;
 import com.kset.common.logging.OpLogContext;
+import com.kset.common.logging.StructLog;
+import com.kset.common.monitor.KsetMonitor;
+import com.kset.web.annotation.OpLog;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
@@ -85,6 +86,7 @@ public class OpLogAspect {
         String status = error == null ? "SUCCESS" : "FAIL";
         String operator = OpLogContext.getOperator();
 
+        String traceId = KsetMonitor.currentTraceId().orElse(null);
         if (error != null) {
             OP_LOG.error("operation log",
                     "type", opLog.type(),
@@ -94,6 +96,7 @@ public class OpLogAspect {
                     "operator", operator,
                     "status", status,
                     "costMs", costMs,
+                    "traceId", traceId,
                     "error", error.getMessage());
         } else {
             OP_LOG.info("operation log",
@@ -103,7 +106,12 @@ public class OpLogAspect {
                     "targetName", targetName,
                     "operator", operator,
                     "status", status,
-                    "costMs", costMs);
+                    "costMs", costMs,
+                    "traceId", traceId);
+        }
+        if (costMs > 500) {
+            KsetMonitor.recordSlowEvent("oplog", costMs,
+                    opLog.type() + ":" + opLog.target());
         }
 
         if (opLog.recordParams()) {

@@ -1,0 +1,38 @@
+package com.kset.monitor.web;
+
+import com.kset.cloud.config.KsetCloudProperties;
+import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.trace.TraceHeaders;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
+
+/**
+ * Servlet 灰度标签注入 MDC，供 LoadBalancer / Dubbo 下游使用。
+ */
+public class GrayTagServletFilter implements Filter {
+
+    private final KsetCloudProperties cloudProperties;
+
+    public GrayTagServletFilter(KsetCloudProperties cloudProperties) {
+        this.cloudProperties = cloudProperties;
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String grayTag = httpRequest.getHeader(TraceHeaders.GRAY_TAG_HEADER);
+        KsetMonitor.bindHttpGrayTag(grayTag, cloudProperties.getDubbo().getDefaultGrayTag());
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            KsetMonitor.clearHttpGrayTag();
+        }
+    }
+}

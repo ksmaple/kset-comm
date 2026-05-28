@@ -1,7 +1,7 @@
 package com.kset.web.autoconfigure;
 
-import com.kset.common.aop.OpLogAspect;
-import com.kset.common.web.TraceIdFilter;
+import com.kset.web.aop.OpLogAspect;
+import com.kset.web.advice.TraceIdResponseBodyAdvice;
 import com.kset.web.config.KsetWebMvcConfigurer;
 import com.kset.web.config.KsetWebProperties;
 import com.kset.web.filter.RequestLoggingFilter;
@@ -20,25 +20,8 @@ import org.springframework.core.Ordered;
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @EnableConfigurationProperties(KsetWebProperties.class)
-@Import({KsetWebMvcConfigurer.class, KsetKnife4jAutoConfiguration.class})
+@Import({KsetWebMvcConfigurer.class, KsetKnife4jAutoConfiguration.class, TraceIdResponseBodyAdvice.class})
 public class KsetWebAutoConfiguration {
-
-    @Bean
-    @ConditionalOnMissingBean
-    public TraceIdFilter traceIdFilter() {
-        return new TraceIdFilter();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(name = "traceIdFilterRegistration")
-    public FilterRegistrationBean<TraceIdFilter> traceIdFilterRegistration(TraceIdFilter traceIdFilter) {
-        FilterRegistrationBean<TraceIdFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(traceIdFilter);
-        registration.addUrlPatterns("/*");
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        registration.setName("traceIdFilter");
-        return registration;
-    }
 
     @Bean
     @ConditionalOnMissingBean

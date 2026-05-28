@@ -1,16 +1,18 @@
 package com.kset.cloud.trace;
 
+import com.kset.common.monitor.KsetMonitor;
 import com.kset.common.trace.TraceHeaders;
-import org.slf4j.MDC;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
- * 跨组件链路上下文（Servlet MDC + Reactor Context）
+ * 跨组件链路上下文（兼容层，委托 {@link KsetMonitor} 门面）。
+ *
+ * @deprecated 请使用 {@link KsetMonitor}，本类保留 1～2 个版本兼容。
  */
+@Deprecated
 public final class TraceContext {
 
     public static final String TRACE_ID_KEY = TraceHeaders.TRACE_ID_KEY;
@@ -24,57 +26,42 @@ public final class TraceContext {
     }
 
     public static String generateTraceId() {
-        return UUID.randomUUID().toString().replace("-", "");
+        return KsetMonitor.generateTraceId();
     }
 
     public static String generateSpanId() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        return KsetMonitor.generateSpanId();
     }
 
     public static void setTraceId(String traceId) {
-        if (traceId != null) {
-            MDC.put(TRACE_ID_KEY, traceId);
-        }
+        KsetMonitor.setTraceId(traceId);
     }
 
     public static void setSpanId(String spanId) {
-        if (spanId != null) {
-            MDC.put(SPAN_ID_KEY, spanId);
-        }
+        KsetMonitor.setSpanId(spanId);
     }
 
     public static void setGrayTag(String grayTag) {
-        if (grayTag != null) {
-            MDC.put(GRAY_TAG_KEY, grayTag);
-        }
+        KsetMonitor.setGrayTag(grayTag);
     }
 
     public static Optional<String> getTraceId() {
-        return Optional.ofNullable(MDC.get(TRACE_ID_KEY));
+        return KsetMonitor.currentTraceId();
     }
 
     public static Optional<String> getGrayTag() {
-        return Optional.ofNullable(MDC.get(GRAY_TAG_KEY));
+        return KsetMonitor.currentGrayTag();
     }
 
     public static void clear() {
-        MDC.remove(TRACE_ID_KEY);
-        MDC.remove(SPAN_ID_KEY);
-        MDC.remove(GRAY_TAG_KEY);
+        KsetMonitor.clear();
     }
 
     public static Context putReactorContext(Context context, String traceId, String grayTag) {
-        Context updated = context;
-        if (traceId != null) {
-            updated = updated.put(TRACE_ID_KEY, traceId);
-        }
-        if (grayTag != null) {
-            updated = updated.put(GRAY_TAG_KEY, grayTag);
-        }
-        return updated;
+        return (Context) KsetMonitor.putReactorContext(context, traceId, grayTag);
     }
 
     public static Optional<String> getFromReactor(ContextView contextView, String key) {
-        return contextView.hasKey(key) ? Optional.of(contextView.get(key)) : Optional.empty();
+        return KsetMonitor.getFromReactor(contextView, key);
     }
 }

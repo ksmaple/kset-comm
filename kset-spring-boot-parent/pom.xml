@@ -126,6 +126,11 @@
                 <artifactId>kset-spring-boot-starter-gateway</artifactId>
                 <version>${kset-spring-boot-starter.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.kset</groupId>
+                <artifactId>kset-spring-boot-starter-monitor</artifactId>
+                <version>${kset-spring-boot-starter.version}</version>
+            </dependency>
 
             <!-- Spring Cloud BOM -->
             <dependency>
@@ -146,6 +151,11 @@
             </dependency>
 
             <!-- Apache Dubbo -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>

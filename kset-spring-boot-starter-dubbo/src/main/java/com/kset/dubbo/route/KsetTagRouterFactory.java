@@ -1,6 +1,7 @@
 package com.kset.dubbo.route;
 
-import com.kset.cloud.trace.TraceContext;
+import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.trace.TraceHeaders;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
@@ -8,8 +9,6 @@ import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.cluster.Router;
 import org.apache.dubbo.rpc.cluster.RouterFactory;
 import org.apache.dubbo.rpc.cluster.router.RouterResult;
-import org.slf4j.MDC;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -82,12 +81,11 @@ public class KsetTagRouterFactory implements RouterFactory {
         }
 
         private String resolveGrayTag(Invocation invocation) {
-            String grayTag = invocation.getAttachment(TraceContext.GRAY_TAG_KEY);
+            String grayTag = invocation.getAttachment(TraceHeaders.GRAY_TAG_KEY);
             if (grayTag != null && !grayTag.isBlank()) {
                 return grayTag;
             }
-            grayTag = MDC.get(TraceContext.GRAY_TAG_KEY);
-            return grayTag != null ? grayTag : "stable";
+            return KsetMonitor.currentGrayTag().orElse("stable");
         }
 
         @Override

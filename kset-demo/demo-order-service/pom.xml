@@ -27,6 +27,10 @@
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
+            <artifactId>kset-spring-boot-starter-monitor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kset</groupId>
             <artifactId>kset-spring-boot-starter-mysql</artifactId>
         </dependency>
         <dependency>

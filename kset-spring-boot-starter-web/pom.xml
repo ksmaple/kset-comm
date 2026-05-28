@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <name>kset-spring-boot-starter-web</name>
-    <description>KSet Web starter - web, validation, global exception, TraceId</description>
+    <description>KSet Web starter - web, validation, global exception</description>
 
     <dependencies>
         <dependency>

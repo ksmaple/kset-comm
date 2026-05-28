@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <name>kset-spring-boot-starter-dubbo</name>
-    <description>KSet Dubbo Starter - RPC, TraceId propagation, gray routing</description>
+    <description>KSet Dubbo Starter - RPC, gray routing (trace via starter-monitor)</description>
 
     <dependencies>
         <dependency>

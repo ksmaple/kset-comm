@@ -1,6 +1,6 @@
 package com.kset.demo.standalone.web;
 
-import com.kset.common.annotation.OpLog;
+import com.kset.web.annotation.OpLog;
 import com.kset.demo.standalone.entity.UserEntity;
 import com.kset.demo.standalone.mapper.UserMapper;
 import com.kset.web.response.ApiResponse;

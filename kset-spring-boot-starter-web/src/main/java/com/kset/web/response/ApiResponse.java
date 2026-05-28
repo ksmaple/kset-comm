@@ -17,6 +17,9 @@ public class ApiResponse<T> {
     @Schema(description = "业务数据")
     private T data;
 
+    @Schema(description = "链路追踪 ID，与响应头 X-Trace-Id 一致")
+    private String traceId;
+
     public ApiResponse() {
     }
 
@@ -24,6 +27,13 @@ public class ApiResponse<T> {
         this.code = code;
         this.message = message;
         this.data = data;
+    }
+
+    public ApiResponse(int code, String message, T data, String traceId) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.traceId = traceId;
     }
 
     public static <T> ApiResponse<T> success(T data) {
@@ -64,5 +74,13 @@ public class ApiResponse<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 }

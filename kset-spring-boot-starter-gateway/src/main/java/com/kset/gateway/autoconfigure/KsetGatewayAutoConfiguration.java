@@ -14,7 +14,6 @@ import com.kset.gateway.auth.PassThroughGatewayAuthProvider;
 import com.kset.gateway.filter.AuthGatewayFilter;
 import com.kset.gateway.spi.GatewayAuthProvider;
 import com.kset.gateway.filter.GrayTagGatewayFilter;
-import com.kset.gateway.filter.TraceIdGatewayFilter;
 import com.kset.gateway.route.GatewayRouteRuleProvider;
 import com.kset.cloud.nacos.NacosConfigConvention;
 import com.kset.cloud.loadbalancer.KsetGrayLoadBalancerConfiguration;
@@ -56,11 +55,6 @@ import java.util.Set;
 @Import(KsetGrayLoadBalancerConfiguration.class)
 @Slf4j
 public class KsetGatewayAutoConfiguration {
-
-    @Bean
-    public GlobalFilter traceIdGatewayFilter(KsetCloudProperties properties) {
-        return new TraceIdGatewayFilter(properties);
-    }
 
     @Bean
     public GlobalFilter grayTagGatewayFilter(KsetCloudProperties properties, GrayTagResolver grayTagResolver) {

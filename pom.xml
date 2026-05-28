@@ -28,6 +28,7 @@
         <module>kset-spring-boot-starter-nacos</module>
         <module>kset-spring-boot-starter-dubbo</module>
         <module>kset-spring-boot-starter-gateway</module>
+        <module>kset-spring-boot-starter-monitor</module>
         <module>kset-demo</module>
     </modules>
 </project>

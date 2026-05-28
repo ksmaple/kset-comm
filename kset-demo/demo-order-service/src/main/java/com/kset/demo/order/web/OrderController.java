@@ -1,6 +1,6 @@
 package com.kset.demo.order.web;
 
-import com.kset.common.annotation.OpLog;
+import com.kset.web.annotation.OpLog;
 import com.kset.demo.api.UserQueryService;
 import com.kset.demo.order.entity.OrderEntity;
 import com.kset.demo.order.mapper.OrderMapper;

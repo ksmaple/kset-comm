@@ -20,6 +20,10 @@
             <groupId>com.kset</groupId>
             <artifactId>kset-spring-boot-starter-gateway</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.kset</groupId>
+            <artifactId>kset-spring-boot-starter-monitor</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
