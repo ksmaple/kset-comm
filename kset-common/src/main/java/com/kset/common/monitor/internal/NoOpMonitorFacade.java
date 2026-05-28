@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * 未装配 {@code kset-spring-boot-starter-monitor} 时的占位实现；不读写 MDC/Reactor。
+ * 未装配 {@code kset-starter-monitor} 时的占位实现；不读写 MDC/Reactor。
  */
 public final class NoOpMonitorFacade implements KsetMonitorFacade {
 

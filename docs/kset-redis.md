@@ -1,6 +1,6 @@
 # KSet Redis 统一抽象
 
-依赖 `kset-spring-boot-starter-redis` 后，可使用 **`KsetRedisService`（注入）** 与 **`KsetRedis`（静态）** 操作 Redis；可选 **Redisson** 提供分布式锁与统一 Jackson 编解码。
+依赖 `kset-starter-redis` 后，可使用 **`KsetRedisService`（注入）** 与 **`KsetRedis`（静态）** 操作 Redis；可选 **Redisson** 提供分布式锁与统一 Jackson 编解码。
 
 | 包 | 说明 |
 |----|------|
@@ -12,7 +12,7 @@
 
 ## Redis Key 规范（`:` 分隔）
 
-对齐 cache-spec **K001**：`{system}:{module}:{business}:{identifier}`。统一使用 [`KsetRedisKeys`](kset-spring-boot-starter-redis/src/main/java/com/kset/redis/key/KsetRedisKeys.java)：
+对齐 cache-spec **K001**：`{system}:{module}:{business}:{identifier}`。统一使用 [`KsetRedisKeys`](kset-starter-redis/src/main/java/com/kset/redis/key/KsetRedisKeys.java)：
 
 - 每段非空，**段内不得包含 `:`**（多段用 `join` / `builder`）
 - 与 `kset.redis.key-prefix` 组合：`KsetRedisKeys.joinPrefix(prefix, logicalKey)`（Template 序列化已内置）

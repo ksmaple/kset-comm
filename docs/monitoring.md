@@ -5,7 +5,7 @@
 ```xml
 <dependency>
     <groupId>com.kset</groupId>
-    <artifactId>kset-spring-boot-starter-monitor</artifactId>
+    <artifactId>kset-starter-monitor</artifactId>
 </dependency>
 ```
 

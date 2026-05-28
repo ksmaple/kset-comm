@@ -1,7 +1,7 @@
 # 项目规则（全局 Kaka 规则）
 
 > 本文件为平台与业务项目共用的全局规则；条文一律 `R{NNN}: 描述`。  
-> 书写细则：[format-convention.md](../skills/kaka-coder-designer/references/format-convention.md)。研发规范见 `kaka-coder-designer` 与 `kset-comm-coder`。
+> 书写细则：[format-convention.md](../skills/kaka-coder-designer/references/format-convention.md)。研发规范见 `kaka-coder-designer` 与 `kset-framework-coder`。
 
 R001: 所有回复必须使用中文
 R001a: 每轮执行或继续工作时，必须声明引用了哪些技能（skill）和规则（rule），格式：「当前执行引用：技能 `{skill-name}`，规则 `{文件名}` R{NNN}、…」。项目规则须带文件名（如 `kaka-project-rules` R007、R028），避免与各技能内 R001/R007 混读。若仅依赖项目默认规则，声明「当前执行引用：项目默认规则」

@@ -1,18 +1,18 @@
 # 快速开始
 
-kset-comm 提供两类典型接入方式，对应 **两个示例工程**：
+kset-framework 提供两类典型接入方式，对应 **两个示例工程**：
 
 | 场景 | 示例模块 | 依赖中间件 | 说明 |
 |------|----------|------------|------|
 | **单机项目** | [demo-standalone-service](../kset-demo/demo-standalone-service) | MySQL、Redis | Web + DB + 缓存，无注册中心 |
 | **微服务 Cloud** | demo-user / demo-order / demo-gateway | MySQL、Redis、Nacos | Nacos + Dubbo + Gateway + 灰度 |
 
-业务项目均继承 `kset-spring-boot-parent`：
+业务项目均继承 `kset-parent`：
 
 ```xml
 <parent>
     <groupId>com.kset</groupId>
-    <artifactId>kset-spring-boot-parent</artifactId>
+    <artifactId>kset-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </parent>
 ```
@@ -29,15 +29,15 @@ kset-comm 提供两类典型接入方式，对应 **两个示例工程**：
 <dependencies>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-web</artifactId>
+        <artifactId>kset-starter-web</artifactId>
     </dependency>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-mysql</artifactId>
+        <artifactId>kset-starter-mysql</artifactId>
     </dependency>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-redis</artifactId>
+        <artifactId>kset-starter-redis</artifactId>
     </dependency>
 </dependencies>
 ```
@@ -162,24 +162,24 @@ mvn -pl kset-demo/demo-standalone-service spring-boot:run
 <dependencies>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-web</artifactId>
+        <artifactId>kset-starter-web</artifactId>
     </dependency>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-mysql</artifactId>
+        <artifactId>kset-starter-mysql</artifactId>
     </dependency>
     <!-- 按需 -->
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-redis</artifactId>
+        <artifactId>kset-starter-redis</artifactId>
     </dependency>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-nacos</artifactId>
+        <artifactId>kset-starter-nacos</artifactId>
     </dependency>
     <dependency>
         <groupId>com.kset</groupId>
-        <artifactId>kset-spring-boot-starter-dubbo</artifactId>
+        <artifactId>kset-starter-dubbo</artifactId>
     </dependency>
 </dependencies>
 ```
@@ -189,7 +189,7 @@ mvn -pl kset-demo/demo-standalone-service spring-boot:run
 ```xml
 <dependency>
     <groupId>com.kset</groupId>
-    <artifactId>kset-spring-boot-starter-gateway</artifactId>
+    <artifactId>kset-starter-gateway</artifactId>
 </dependency>
 ```
 

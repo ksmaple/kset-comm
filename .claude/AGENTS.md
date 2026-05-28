@@ -1,4 +1,4 @@
-# KSet Spring Boot 公共框架（kset-comm）AI 协作配置
+# KSet 公共框架（kset-framework）AI 协作配置
 
 ## 规则
 
@@ -6,8 +6,8 @@
 
 ## 技能
 
-- 研发: `kset-comm-coder` → `.claude/skills/kset-comm-coder/`
-- 修复: `kset-comm-fixer` → `.claude/skills/kset-comm-fixer/`
+- 研发: `kset-framework-coder` → `.claude/skills/kset-framework-coder/`
+- 修复: `kset-framework-fixer` → `.claude/skills/kset-framework-fixer/`
 - 规范与写码编排: `kaka-coder-designer` → `.claude/skills/kaka-coder-designer/`
 
 ## 多环境
@@ -22,6 +22,6 @@
 
 ## 使用指引
 
-**实现代码** → `kset-comm-coder`  
-**修复** → `kset-comm-fixer`  
-**新模块设计** → `kaka-coder-designer`（域 spec）→ 可选 `.claude/design/ddd|sql` → `kset-comm-coder`
+**实现代码** → `kset-framework-coder`  
+**修复** → `kset-framework-fixer`  
+**新模块设计** → `kaka-coder-designer`（域 spec）→ 可选 `.claude/design/ddd|sql` → `kset-framework-coder`

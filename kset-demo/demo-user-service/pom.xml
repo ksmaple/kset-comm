@@ -23,23 +23,23 @@
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-web</artifactId>
+            <artifactId>kset-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-monitor</artifactId>
+            <artifactId>kset-starter-monitor</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-mysql</artifactId>
+            <artifactId>kset-starter-mysql</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-nacos</artifactId>
+            <artifactId>kset-starter-nacos</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-dubbo</artifactId>
+            <artifactId>kset-starter-dubbo</artifactId>
         </dependency>
     </dependencies>
 

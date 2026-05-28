@@ -228,7 +228,7 @@ boolean ok = signer.verifySha1(params);  // 或 checkSign()
 
 ## 依赖
 
-业务工程通过任意 `kset-spring-boot-starter-*` 间接依赖 `kset-common`，也可直接声明：
+业务工程通过任意 `kset-starter-*` 间接依赖 `kset-common`，也可直接声明：
 
 ```xml
 <dependency>
@@ -237,4 +237,4 @@ boolean ok = signer.verifySha1(params);  // 或 checkSign()
 </dependency>
 ```
 
-`kset-spring-boot-parent` BOM 已管理 OkHttp、Guava、commons-lang3 等版本，**无需** 再引入 `joda-time`。
+`kset-parent` BOM 已管理 OkHttp、Guava、commons-lang3 等版本，**无需** 再引入 `joda-time`。

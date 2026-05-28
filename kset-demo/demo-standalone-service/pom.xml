@@ -19,19 +19,19 @@
     <dependencies>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-web</artifactId>
+            <artifactId>kset-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-monitor</artifactId>
+            <artifactId>kset-starter-monitor</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-mysql</artifactId>
+            <artifactId>kset-starter-mysql</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
-            <artifactId>kset-spring-boot-starter-redis</artifactId>
+            <artifactId>kset-starter-redis</artifactId>
         </dependency>
     </dependencies>
 

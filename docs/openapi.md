@@ -1,6 +1,6 @@
 # API 文档（OpenAPI 3 / Knife4j）
 
-业务服务引入 `kset-spring-boot-starter-web` 后，默认集成 **Knife4j 4.x**（底层 springdoc-openapi）。
+业务服务引入 `kset-starter-web` 后，默认集成 **Knife4j 4.x**（底层 springdoc-openapi）。
 
 ## 访问地址
 

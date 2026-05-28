@@ -22,15 +22,21 @@ function Ensure-DirLink {
     if (Test-Path $LinkPath) {
         $item = Get-Item $LinkPath -Force
         if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
-            Write-Host "OK (exists): $LinkPath"
-            return
+            $currentTarget = $item.Target
+            if ($currentTarget -and ($currentTarget -ieq $TargetPath)) {
+                Write-Host "OK (exists): $LinkPath"
+                return
+            }
+            Write-Host "Relink (stale target): $LinkPath -> $currentTarget"
+            Remove-Item -LiteralPath $LinkPath -Force
+        } else {
+            $children = Get-ChildItem -LiteralPath $LinkPath -Force -ErrorAction SilentlyContinue
+            if ($children -and $children.Count -gt 0) {
+                Write-Error "Path exists and is not empty (not a link): $LinkPath"
+            }
+            Remove-Item -LiteralPath $LinkPath -Force
+            Write-Host "Removed empty dir: $LinkPath"
         }
-        $children = Get-ChildItem -LiteralPath $LinkPath -Force -ErrorAction SilentlyContinue
-        if ($children -and $children.Count -gt 0) {
-            Write-Error "Path exists and is not empty (not a link): $LinkPath"
-        }
-        Remove-Item -LiteralPath $LinkPath -Force
-        Write-Host "Removed empty dir: $LinkPath"
     }
     cmd /c mklink /J `"$LinkPath`" `"$TargetPath`" | Out-Null
     Write-Host "Linked: $LinkPath -> $TargetPath"

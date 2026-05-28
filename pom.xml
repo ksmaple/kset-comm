@@ -6,12 +6,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kset</groupId>
-    <artifactId>kset-comm</artifactId>
+    <artifactId>kset-framework</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>kset-comm</name>
-    <description>KSet Spring Boot common framework aggregator</description>
+    <name>kset-framework</name>
+    <description>KSet framework aggregator (parent BOM and starters)</description>
+
+    <scm>
+        <connection>scm:git:git@github.com:ksmaple/kset-framework.git</connection>
+        <developerConnection>scm:git:git@github.com:ksmaple/kset-framework.git</developerConnection>
+        <url>https://github.com/ksmaple/kset-framework</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,16 +25,16 @@
     </properties>
 
     <modules>
-        <module>kset-spring-boot-parent</module>
+        <module>kset-parent</module>
         <module>kset-common</module>
         <module>kset-cloud</module>
-        <module>kset-spring-boot-starter-web</module>
-        <module>kset-spring-boot-starter-mysql</module>
-        <module>kset-spring-boot-starter-redis</module>
-        <module>kset-spring-boot-starter-nacos</module>
-        <module>kset-spring-boot-starter-dubbo</module>
-        <module>kset-spring-boot-starter-gateway</module>
-        <module>kset-spring-boot-starter-monitor</module>
+        <module>kset-starter-web</module>
+        <module>kset-starter-mysql</module>
+        <module>kset-starter-redis</module>
+        <module>kset-starter-nacos</module>
+        <module>kset-starter-dubbo</module>
+        <module>kset-starter-gateway</module>
+        <module>kset-starter-monitor</module>
         <module>kset-demo</module>
     </modules>
 </project>
