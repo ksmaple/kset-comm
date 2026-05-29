@@ -1,7 +1,9 @@
-package com.kset.web.filter;
+﻿package com.kset.web.filter;
 
 import com.kset.common.logging.LogMaskingUtil;
-import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.monitor.Monitor;
+import com.kset.common.monitor.facade.MonitorStatus;
+import com.kset.common.monitor.facade.MonitorTypes;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +33,8 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         } finally {
             long cost = System.currentTimeMillis() - start;
             if (cost >= 500) {
-                KsetMonitor.recordSlowEvent("http-request-log", cost, request.getMethod() + " " + request.getRequestURI());
+                Monitor.logEvent(MonitorTypes.URL, "request-log", MonitorStatus.FAIL,
+                        cost + "ms " + request.getMethod() + " " + request.getRequestURI());
             }
             if (log.isDebugEnabled()) {
                 String body = new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8);
@@ -40,7 +43,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
                         request.getRequestURI(),
                         wrappedResponse.getStatus(),
                         cost,
-                        KsetMonitor.currentTraceId().orElse(null),
+                        Monitor.currentTraceId().orElse(null),
                         LogMaskingUtil.maskText(body));
             }
             wrappedResponse.copyBodyToResponse();

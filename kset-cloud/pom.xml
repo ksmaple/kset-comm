@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <name>kset-cloud</name>
-    <description>KSet cloud conventions - config rules, SPI, TraceContext</description>
+    <description>KSet cloud conventions - config rules, SPI</description>
 
     <dependencies>
         <dependency>

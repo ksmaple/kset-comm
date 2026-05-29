@@ -1,8 +1,8 @@
-package com.kset.gateway.filter;
+﻿package com.kset.gateway.filter;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.cloud.spi.GrayTagResolver;
-import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.monitor.Monitor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
 
 /**
- * Gateway 灰度标签注入（经 {@link KsetMonitor} 门面）。
+ * Gateway 灰度标签注入（经 {@link Monitor} 门面）。
  */
 public class GrayTagGatewayFilter implements GlobalFilter, Ordered {
 
@@ -34,9 +34,9 @@ public class GrayTagGatewayFilter implements GlobalFilter, Ordered {
                 .header(grayHeader, grayTag)
                 .build();
 
-        KsetMonitor.setGrayTag(grayTag);
+        Monitor.setGrayTag(grayTag);
         return chain.filter(exchange.mutate().request(mutated).build())
-                .contextWrite(ctx -> (Context) KsetMonitor.putReactorContext(ctx, null, grayTag));
+                .contextWrite(ctx -> (Context) Monitor.putReactorContext(ctx, null, grayTag));
     }
 
     @Override

@@ -1,22 +1,22 @@
-package com.kset.common.monitor.internal;
+﻿package com.kset.common.monitor.internal;
 
 import com.kset.common.monitor.DubboAttachmentAccessor;
 import com.kset.common.monitor.GatewayTraceBinding;
 import com.kset.common.monitor.HttpTraceBinding;
-import com.kset.common.monitor.KsetMonitorFacade;
+import com.kset.common.monitor.facade.MonitorFacade;
 import com.kset.common.monitor.TraceSnapshot;
-import com.kset.monitor.facade.MetricKind;
-import com.kset.monitor.facade.MonitorStatus;
-import com.kset.monitor.facade.MonitorTransaction;
-import com.kset.monitor.internal.NoOpMonitorTransaction;
+import com.kset.common.monitor.facade.MetricKind;
+import com.kset.common.monitor.facade.MonitorStatus;
+import com.kset.common.monitor.facade.MonitorTransaction;
+import com.kset.common.monitor.internal.NoOpMonitorTransaction;
 
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * 未装配 {@code kset-starter-monitor} 时的占位实现；不读写 MDC/Reactor。
+ * 测试或显式关闭监控时使用的空实现；正常使用请依赖内置 {@link LogBackend} 或 starter 装配的门面。
  */
-public final class NoOpMonitorFacade implements KsetMonitorFacade {
+public final class NoOpMonitorFacade implements MonitorFacade {
 
     @Override
     public Optional<String> currentTraceId() {
@@ -123,9 +123,5 @@ public final class NoOpMonitorFacade implements KsetMonitorFacade {
 
     @Override
     public void logError(Throwable throwable, String message) {
-    }
-
-    @Override
-    public void recordSlowEvent(String type, long costMs, String message) {
     }
 }

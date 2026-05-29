@@ -48,6 +48,20 @@ kset-framework 提供两类典型接入方式，对应 **两个示例工程**：
 
 **不要** 引入 `starter-nacos`、`starter-dubbo`、`starter-gateway`（单机不会写入 Nacos 默认 `spring.config.import`）。
 
+引入 `kset-starter-monitor` 后，业务代码获取 traceId 或埋点请使用 **`com.kset.common.monitor.Monitor`**（详见 [monitoring.md](monitoring.md)）：
+
+```java
+import com.kset.common.monitor.Monitor;
+import com.kset.common.monitor.facade.MonitorTypes;
+import com.kset.common.monitor.facade.MonitorStatus;
+
+String traceId = Monitor.currentTraceId().orElse("-");
+try (var tx = Monitor.newTransaction(MonitorTypes.BIZ, "createOrder")) {
+    // ...
+    tx.setStatus(MonitorStatus.SUCCESS);
+}
+```
+
 ### 最小配置 `application.yaml`
 
 ```yaml

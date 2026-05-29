@@ -1,6 +1,6 @@
-package com.kset.web.advice;
+﻿package com.kset.web.advice;
 
-import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.monitor.Monitor;
 import com.kset.web.response.ApiResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * 为 {@link ApiResponse} 自动填充 traceId（经 {@link KsetMonitor} 门面）。
+ * 为 {@link ApiResponse} 自动填充 traceId（经 {@link Monitor} 门面）。
  */
 @RestControllerAdvice
 @ConditionalOnClass(ApiResponse.class)
@@ -32,7 +32,7 @@ public class TraceIdResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof ApiResponse<?> apiResponse) {
             if (apiResponse.getTraceId() == null || apiResponse.getTraceId().isBlank()) {
-                apiResponse.setTraceId(KsetMonitor.currentTraceId().orElse(null));
+                apiResponse.setTraceId(Monitor.currentTraceId().orElse(null));
             }
             return apiResponse;
         }

@@ -1,5 +1,8 @@
 package com.kset.common.logging;
 
+import com.kset.common.monitor.Monitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.util.UUID;
@@ -9,6 +12,13 @@ import java.util.UUID;
  *
  * <p>为关键业务流程注入 {@code flow.*} 系列 MDC 字段，支持日志驱动的
  * 流程完整性校验（断点检测、步骤连续性、事件链完整性）。
+ *
+ * <p><b>与 {@link Monitor} 协作：</b>
+ * <ul>
+ *   <li>分布式 traceId 由 Monitor 管理（通常由 Servlet/Gateway Filter 入站绑定），本类不写入 traceId</li>
+ *   <li>{@link #clear()} 仅移除 {@code flow.*} 键，不调用 {@link Monitor#clear()}</li>
+ *   <li>跨线程执行 flow 步骤时，用 {@link Monitor#openScope(Monitor#capture())} 恢复链路上下文</li>
+ * </ul>
  *
  * <p>使用示例：
  * <pre>{@code
@@ -29,9 +39,20 @@ import java.util.UUID;
  * } finally {
  *     FlowLogContext.clear();
  * }
+ *
+ * // 跨线程：同时传播 Monitor 链路与 flow MDC
+ * TraceSnapshot snapshot = Monitor.capture();
+ * executor.execute(() -> {
+ *     try (MonitorScope scope = Monitor.openScope(snapshot)) {
+ *         FlowLogContext.step("async_task", FlowEventType.ENTER);
+ *         // ...
+ *     }
+ * });
  * }</pre>
  */
 public final class FlowLogContext {
+
+    private static final Logger log = LoggerFactory.getLogger(FlowLogContext.class);
 
     private static final String FLOW_ID_KEY = "flow.instanceId";
     private static final String FLOW_STEP_KEY = "flow.step";
@@ -49,6 +70,9 @@ public final class FlowLogContext {
      * @return 生成的 flow instanceId
      */
     public static String beginFlow(String flowType, String bizKey) {
+        if (Monitor.currentTraceId().isEmpty() && log.isDebugEnabled()) {
+            log.debug("FlowLogContext.beginFlow without bound traceId; ensure Monitor.bindHttpIncoming or Filter runs first");
+        }
         String flowId = flowType + "-" + bizKey + "-" + UUID.randomUUID().toString().substring(0, 8);
         MDC.put(FLOW_ID_KEY, flowId);
         MDC.put(FLOW_STEP_KEY, "0");
@@ -100,7 +124,7 @@ public final class FlowLogContext {
     }
 
     /**
-     * 清除所有 flow 相关的 MDC 字段。
+     * 清除所有 flow 相关的 MDC 字段（不调用 {@link Monitor#clear()}，避免误删 traceId）。
      */
     public static void clear() {
         MDC.remove(FLOW_ID_KEY);

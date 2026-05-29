@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass(name = "com.baomidou.mybatisplus.core.mapper.BaseMapper")
 @ConditionalOnProperty(prefix = "kset.mysql", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(KsetMysqlProperties.class)
-@Import({KsetMybatisPlusConfiguration.class, KsetFlywayAutoConfiguration.class})
+@Import({KsetFlywayAutoConfiguration.class})
 public class KsetMysqlAutoConfiguration {
 
     @Bean

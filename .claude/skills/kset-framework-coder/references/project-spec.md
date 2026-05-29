@@ -34,6 +34,7 @@
 - **API**：禁止将 demo/对外 HTTP 改为「全 POST + ApiResult」；保持 REST 动词与 `com.kset.web.response.ApiResponse`；`@OpLog` 在 `com.kset.web.annotation`。
 - **DDD**：新增 starter 或 common 能力时不强制四层 DDD；`kset-demo` 仅作集成示例，保持轻量分层。
 - **模块边界**：无 Servlet/AOP 的工具与监控门面 API 进 `kset-common`；Servlet Filter、OpLog、Web 工具进对应 `kset-starter-*`；云相关进 `kset-cloud`；示例仅放 `kset-demo`。
+- **监控**：统一包根 `com.kset.common.monitor`；业务代码使用静态入口 `com.kset.common.monitor.Monitor` 与 `facade.MonitorFacade`；默认后端 `backend.LogBackend`（本地 SLF4J）；`com.kset.monitor.*`、`KsetMonitor`、`KsetMonitorFacade`、`com.kset.cloud.trace.TraceContext` 已移除。
 - **依赖**：常用工具库（Commons / Guava / OkHttp / Jackson / Fastjson2 / TTL 等）**仅**在 `kset-common` 声明；`kset-cloud` 与各 `kset-starter-*` **必须**依赖 `kset-common`，禁止重复声明上述工具依赖；领域能力（MyBatis、Redis、Nacos 等）在对应 starter 声明。
 - **版本**：子模块版本由根 `kset-parent` / `kset-framework` BOM 统一管理，勿在子模块随意覆盖 Spring Boot 主版本。
 - **测试依赖**：`spring-boot-starter-test` 由 `kset-parent` 以 `test` scope 统一继承；子模块勿重复声明，新增测试能力（如 Testcontainers）在 parent 集中维护。

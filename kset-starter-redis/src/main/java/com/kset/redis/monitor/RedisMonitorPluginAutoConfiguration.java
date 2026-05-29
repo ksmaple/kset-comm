@@ -1,9 +1,9 @@
-package com.kset.redis.monitor;
+﻿package com.kset.redis.monitor;
 
-import com.kset.monitor.facade.MonitorTypes;
-import com.kset.monitor.interceptor.FrameworkInterceptor;
-import com.kset.monitor.interceptor.InvocationContext;
-import com.kset.monitor.interceptor.MonitorInterceptorRegistry;
+import com.kset.common.monitor.facade.MonitorTypes;
+import com.kset.common.monitor.interceptor.FrameworkInterceptor;
+import com.kset.common.monitor.interceptor.InvocationContext;
+import com.kset.common.monitor.interceptor.MonitorInterceptorRegistry;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
  * Redis 监控插件：注册 {@link FrameworkInterceptor}，供 Redis 操作侧发送 {@link InvocationContext}。
  */
 @AutoConfiguration
-@ConditionalOnClass(name = "com.kset.monitor.Monitor")
+@ConditionalOnClass(name = "com.kset.common.monitor.Monitor")
 @ConditionalOnProperty(prefix = "kset.monitor.plugin.redis", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class RedisMonitorPluginAutoConfiguration {
 

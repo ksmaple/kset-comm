@@ -1,6 +1,6 @@
-package com.kset.dubbo.route;
+﻿package com.kset.dubbo.route;
 
-import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.monitor.Monitor;
 import com.kset.common.trace.TraceHeaders;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Invocation;
@@ -85,7 +85,7 @@ public class KsetTagRouterFactory implements RouterFactory {
             if (grayTag != null && !grayTag.isBlank()) {
                 return grayTag;
             }
-            return KsetMonitor.currentGrayTag().orElse("stable");
+            return Monitor.currentGrayTag().orElse("stable");
         }
 
         @Override

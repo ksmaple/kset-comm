@@ -128,11 +128,15 @@ String body = KsetHttp.get("https://example.com/api")
 ```java
 import com.kset.common.utils.thread.KsetThreadPoolFactory;
 import com.kset.common.utils.thread.MdcThreadPoolTraceAdapter;
+import com.kset.common.monitor.Monitor;
 
 KsetThreadPoolFactory factory = KsetThreadPoolFactory.getInstance();
 factory.setGlobalTraceContextAdapter(new MdcThreadPoolTraceAdapter());
 factory.register("order-payment", KsetThreadPoolFactory.PoolConfig.ioConfig());
-factory.execute("order-payment", () -> callExternalApi());
+factory.execute("order-payment", () -> {
+    // 子线程可读取 Monitor.currentTraceId()
+    callExternalApi();
+});
 ```
 
 | 类 | 说明 |
@@ -140,7 +144,51 @@ factory.execute("order-payment", () -> callExternalApi());
 | `KsetThreadPoolFactory` | 推荐入口，按 biz 名懒创建池 |
 | `KsetThreadPoolExecutor` | 底层实现，可 Builder 单独使用 |
 | `ThreadPoolMetrics` / `ThreadPoolReporter` | 指标与上报 |
-| `ThreadPoolTraceAdapter` / `MdcThreadPoolTraceAdapter` | TraceId 跨线程传递 |
+| `ThreadPoolTraceAdapter` / `MdcThreadPoolTraceAdapter` | TraceId 跨线程传递（基于 `com.kset.common.monitor.Monitor`） |
+
+## 日志与链路上下文（`com.kset.common.logging` + `com.kset.common.monitor`）
+
+**分布式 traceId** 由 `Monitor` 写入 MDC（HTTP/Dubbo/Gateway Filter 或 `Monitor.bindHttpIncoming`），logging 包只消费，不重复存储。
+
+| 类 | 说明 |
+|----|------|
+| `StructLog` / `LogUtil` | 结构化日志；traceId 随 MDC 自动进入 JSON |
+| `FlowLogContext` | 业务流程步骤（`flow.*` MDC 键），与 traceId 共存 |
+| `OpLogContext` | 操作人（MDC `operator` 键） |
+| `LogMaskingUtil` | 敏感字段脱敏 |
+
+```java
+import com.kset.common.logging.FlowLogContext;
+import com.kset.common.logging.FlowLogContext.FlowEventType;
+import com.kset.common.logging.StructLog;
+import com.kset.common.monitor.Monitor;
+import com.kset.common.monitor.MonitorScope;
+
+private static final StructLog LOG = StructLog.of(OrderService.class);
+
+public void process(String userId) {
+    // traceId 通常已由 Filter 绑定；结构化日志自动带 traceId
+    LOG.info("start process", "userId", userId);
+
+    String flowId = FlowLogContext.beginFlow("order_create", userId);
+    try {
+        FlowLogContext.step("validate", FlowEventType.ENTER);
+        // ...
+        FlowLogContext.endFlow();
+    } finally {
+        FlowLogContext.clear(); // 不清 Monitor
+    }
+}
+
+// 跨线程：Monitor 链路 + flow MDC 一并传播
+executor.execute(() -> {
+    try (MonitorScope scope = Monitor.openScope(Monitor.capture())) {
+        FlowLogContext.step("async_step", FlowEventType.ENTER);
+    }
+});
+```
+
+详见 [monitoring.md](monitoring.md)「与 logging 协作」小节。
 
 ## 随机（`com.kset.common.utils.random`）
 

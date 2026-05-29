@@ -1,10 +1,12 @@
-package com.kset.web.aop;
+﻿package com.kset.web.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kset.common.logging.LogMaskingUtil;
 import com.kset.common.logging.OpLogContext;
 import com.kset.common.logging.StructLog;
-import com.kset.common.monitor.KsetMonitor;
+import com.kset.common.monitor.Monitor;
+import com.kset.common.monitor.facade.MonitorStatus;
+import com.kset.common.monitor.facade.MonitorTypes;
 import com.kset.web.annotation.OpLog;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +88,7 @@ public class OpLogAspect {
         String status = error == null ? "SUCCESS" : "FAIL";
         String operator = OpLogContext.getOperator();
 
-        String traceId = KsetMonitor.currentTraceId().orElse(null);
+        String traceId = Monitor.currentTraceId().orElse(null);
         if (error != null) {
             OP_LOG.error("operation log",
                     "type", opLog.type(),
@@ -110,8 +112,8 @@ public class OpLogAspect {
                     "traceId", traceId);
         }
         if (costMs > 500) {
-            KsetMonitor.recordSlowEvent("oplog", costMs,
-                    opLog.type() + ":" + opLog.target());
+            Monitor.logEvent(MonitorTypes.BIZ, "oplog", MonitorStatus.FAIL,
+                    costMs + "ms " + opLog.type() + ":" + opLog.target());
         }
 
         if (opLog.recordParams()) {

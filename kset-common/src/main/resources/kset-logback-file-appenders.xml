@@ -28,6 +28,11 @@
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                     <includeMdcKeyName>spanId</includeMdcKeyName>
                     <includeMdcKeyName>grayTag</includeMdcKeyName>
+                    <includeMdcKeyName>operator</includeMdcKeyName>
+                    <includeMdcKeyName>flow.instanceId</includeMdcKeyName>
+                    <includeMdcKeyName>flow.step</includeMdcKeyName>
+                    <includeMdcKeyName>flow.stepName</includeMdcKeyName>
+                    <includeMdcKeyName>flow.eventType</includeMdcKeyName>
                 </mdc>
                 <arguments/>
                 <stackTrace/>
@@ -71,6 +76,11 @@
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                     <includeMdcKeyName>spanId</includeMdcKeyName>
                     <includeMdcKeyName>grayTag</includeMdcKeyName>
+                    <includeMdcKeyName>operator</includeMdcKeyName>
+                    <includeMdcKeyName>flow.instanceId</includeMdcKeyName>
+                    <includeMdcKeyName>flow.step</includeMdcKeyName>
+                    <includeMdcKeyName>flow.stepName</includeMdcKeyName>
+                    <includeMdcKeyName>flow.eventType</includeMdcKeyName>
                 </mdc>
                 <arguments/>
                 <stackTrace/>
@@ -116,6 +126,11 @@
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                     <includeMdcKeyName>spanId</includeMdcKeyName>
                     <includeMdcKeyName>grayTag</includeMdcKeyName>
+                    <includeMdcKeyName>operator</includeMdcKeyName>
+                    <includeMdcKeyName>flow.instanceId</includeMdcKeyName>
+                    <includeMdcKeyName>flow.step</includeMdcKeyName>
+                    <includeMdcKeyName>flow.stepName</includeMdcKeyName>
+                    <includeMdcKeyName>flow.eventType</includeMdcKeyName>
                 </mdc>
                 <arguments/>
                 <stackTrace/>
