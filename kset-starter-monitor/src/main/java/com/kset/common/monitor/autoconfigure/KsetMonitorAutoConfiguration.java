@@ -32,7 +32,8 @@ public class KsetMonitorAutoConfiguration {
     @Bean
     ApplicationRunner ksetMonitorStartupLogger(KsetMonitorProperties properties) {
         return args -> log.info(
-                "[kset-monitor] Full-link monitoring active (web={}, dubbo={}, gateway={}, mybatis={}, httpClient={}, redis={}, threadPool={})",
+                "[kset-monitor] Full-link monitoring active (backend={}, web={}, dubbo={}, gateway={}, mybatis={}, httpClient={}, redis={}, threadPool={})",
+                properties.getBackend(),
                 properties.getWeb().isEnabled(),
                 properties.getDubbo().isEnabled(),
                 properties.getGateway().isEnabled() && properties.getGateway().isTraceEnabled(),

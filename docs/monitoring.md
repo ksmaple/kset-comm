@@ -9,7 +9,7 @@
 </dependency>
 ```
 
-引入后 `kset.monitor.enabled=true`（默认）自动装配链路透传与 CAT 风格埋点；门面由 `KsetMonitorFacadeAutoConfiguration` 注册，**默认后端为 `LogBackend`（本地 SLF4J 日志）**。
+引入后 `kset.monitor.enabled=true`（默认）自动装配链路透传与 CAT 风格埋点；门面由 `KsetMonitorFacadeAutoConfiguration` 注册，**默认后端为 `LogBackend`（本地 SLF4J 日志）**。只有显式配置 `kset.monitor.backend=cat` 时才启用 CAT 后端。
 
 ## 目录对照（monitor-facade 参考实现）
 
@@ -111,7 +111,10 @@ HTTP 慢请求由 URL Transaction + `LogBackend` 超阈值 WARN 统一处理。
 kset:
   monitor:
     enabled: true
-    backend: log          # 默认 log=本地 SLF4J；其他值当前均回落 log
+    backend: log          # 默认 log=本地 SLF4J；cat=CAT 后端，未配置 cat 时不启动 CAT
+    cat:
+      initialize: false   # 需要框架主动初始化 CAT 时设 true；否则由业务已有 CAT 配置负责
+      domain: demo-app    # initialize=true 时可选
     sampler:
       rate: 1.0
     reporter:

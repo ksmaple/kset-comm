@@ -20,6 +20,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.kset</groupId>
             <artifactId>kset-common</artifactId>
         </dependency>

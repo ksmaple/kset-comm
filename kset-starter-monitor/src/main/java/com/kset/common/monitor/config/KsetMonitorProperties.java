@@ -10,6 +10,7 @@ public class KsetMonitorProperties {
 
     private String backend = "log";
 
+    private final Cat cat = new Cat();
     private final SamplerConfig sampler = new SamplerConfig();
     private final Reporter reporter = new Reporter();
     private final Web web = new Web();
@@ -36,6 +37,10 @@ public class KsetMonitorProperties {
 
     public void setBackend(String backend) {
         this.backend = backend;
+    }
+
+    public Cat getCat() {
+        return cat;
     }
 
     public SamplerConfig getSampler() {
@@ -91,6 +96,27 @@ public class KsetMonitorProperties {
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+        }
+    }
+
+    public static class Cat {
+        private boolean initialize = false;
+        private String domain;
+
+        public boolean isInitialize() {
+            return initialize;
+        }
+
+        public void setInitialize(boolean initialize) {
+            this.initialize = initialize;
+        }
+
+        public String getDomain() {
+            return domain;
+        }
+
+        public void setDomain(String domain) {
+            this.domain = domain;
         }
     }
 
