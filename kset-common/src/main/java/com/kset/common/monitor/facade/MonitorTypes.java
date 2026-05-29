@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.facade;
+package com.kset.common.monitor.facade;
 
 /**
  * 标准 Transaction/Event type 常量（对齐 CAT 命名约定）。

@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.sampler;
+package com.kset.common.monitor.sampler;
 
 import java.util.concurrent.ThreadLocalRandom;
 

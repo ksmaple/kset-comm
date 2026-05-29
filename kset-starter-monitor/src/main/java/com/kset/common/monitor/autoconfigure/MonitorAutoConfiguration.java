@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.autoconfigure;
+package com.kset.common.monitor.autoconfigure;
 
 import com.kset.common.monitor.aop.MonitorAspect;
 import com.kset.common.monitor.interceptor.MvcMonitorInterceptor;

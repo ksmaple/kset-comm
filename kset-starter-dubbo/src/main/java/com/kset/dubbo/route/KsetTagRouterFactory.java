@@ -1,4 +1,4 @@
-﻿package com.kset.dubbo.route;
+package com.kset.dubbo.route;
 
 import com.kset.common.monitor.Monitor;
 import com.kset.common.trace.TraceHeaders;

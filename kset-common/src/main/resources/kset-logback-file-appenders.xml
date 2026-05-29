@@ -33,6 +33,8 @@
                     <includeMdcKeyName>flow.step</includeMdcKeyName>
                     <includeMdcKeyName>flow.stepName</includeMdcKeyName>
                     <includeMdcKeyName>flow.eventType</includeMdcKeyName>
+                    <includeMdcKeyName>flow.errorType</includeMdcKeyName>
+                    <includeMdcKeyName>flow.errorMessage</includeMdcKeyName>
                 </mdc>
                 <arguments/>
                 <stackTrace/>
@@ -46,8 +48,10 @@
                 </pattern>
             </providers>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
@@ -81,6 +85,8 @@
                     <includeMdcKeyName>flow.step</includeMdcKeyName>
                     <includeMdcKeyName>flow.stepName</includeMdcKeyName>
                     <includeMdcKeyName>flow.eventType</includeMdcKeyName>
+                    <includeMdcKeyName>flow.errorType</includeMdcKeyName>
+                    <includeMdcKeyName>flow.errorMessage</includeMdcKeyName>
                 </mdc>
                 <arguments/>
                 <stackTrace/>
@@ -131,6 +137,8 @@
                     <includeMdcKeyName>flow.step</includeMdcKeyName>
                     <includeMdcKeyName>flow.stepName</includeMdcKeyName>
                     <includeMdcKeyName>flow.eventType</includeMdcKeyName>
+                    <includeMdcKeyName>flow.errorType</includeMdcKeyName>
+                    <includeMdcKeyName>flow.errorMessage</includeMdcKeyName>
                 </mdc>
                 <arguments/>
                 <stackTrace/>

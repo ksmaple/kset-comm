@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.plugin;
+package com.kset.common.monitor.plugin;
 
 import com.kset.common.monitor.Monitor;
 import com.kset.common.monitor.facade.MonitorTypes;

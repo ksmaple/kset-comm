@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.facade;
+package com.kset.common.monitor.facade;
 
 /**
  * 指标类型（对齐 CAT count / duration 指标）。

@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.reporter;
+package com.kset.common.monitor.reporter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

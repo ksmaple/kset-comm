@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.sampler;
+package com.kset.common.monitor.sampler;
 
 /**
  * 采样策略（trace / transaction 共用）。

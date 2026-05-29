@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.autoconfigure;
+package com.kset.common.monitor.autoconfigure;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.common.monitor.config.KsetMonitorProperties;

@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.internal;
+package com.kset.common.monitor.internal;
 
 import com.kset.common.monitor.facade.MonitorStatus;
 import com.kset.common.monitor.facade.MonitorTransaction;

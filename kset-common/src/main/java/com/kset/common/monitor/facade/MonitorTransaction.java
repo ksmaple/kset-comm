@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.facade;
+package com.kset.common.monitor.facade;
 
 /**
  * 监控事务抽象（对齐 CAT Transaction，须 complete/close）。

@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.reporter;
+package com.kset.common.monitor.reporter;
 
 /**
  * 异步上报队列 SPI。

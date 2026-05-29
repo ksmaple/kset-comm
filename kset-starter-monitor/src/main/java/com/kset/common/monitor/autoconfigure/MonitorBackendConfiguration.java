@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.autoconfigure;
+package com.kset.common.monitor.autoconfigure;
 
 import com.kset.common.monitor.backend.LogBackend;
 import com.kset.common.monitor.backend.MonitorBackend;

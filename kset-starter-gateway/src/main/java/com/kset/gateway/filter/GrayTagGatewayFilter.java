@@ -1,4 +1,4 @@
-﻿package com.kset.gateway.filter;
+package com.kset.gateway.filter;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.cloud.spi.GrayTagResolver;

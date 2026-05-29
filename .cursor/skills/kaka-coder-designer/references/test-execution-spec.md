@@ -1,4 +1,4 @@
-﻿# 测试执行规范（可调用性验证）
+# 测试执行规范（可调用性验证）
 
 > kaka-coder-designer · 编译通过后由 `{proj}-coder` / `{proj}-fixer` 按需执行；任务编排见 [codegen-task-spec.md](codegen-task-spec.md)。
 

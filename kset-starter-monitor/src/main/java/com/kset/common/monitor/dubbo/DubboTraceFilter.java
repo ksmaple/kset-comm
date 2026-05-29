@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.dubbo;
+package com.kset.common.monitor.dubbo;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.common.monitor.Monitor;

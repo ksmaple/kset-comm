@@ -1,4 +1,4 @@
-﻿# 设计产出检查（ddd / sql）
+# 设计产出检查（ddd / sql）
 
 > kaka-coder-designer · 新模块设计阶段按需勾选
 

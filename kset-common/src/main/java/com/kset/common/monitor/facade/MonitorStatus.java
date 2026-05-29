@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.facade;
+package com.kset.common.monitor.facade;
 
 /**
  * 监控事务/事件状态（对齐 CAT Transaction 状态）。

@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.reporter;
+package com.kset.common.monitor.reporter;
 
 import com.kset.common.monitor.facade.MetricKind;
 

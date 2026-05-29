@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.internal;
+package com.kset.common.monitor.internal;
 
 import com.kset.common.monitor.DubboAttachmentAccessor;
 import com.kset.common.monitor.GatewayTraceBinding;

@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.web;
+package com.kset.common.monitor.web;
 
 import com.kset.common.monitor.HttpTraceBinding;
 import com.kset.common.monitor.Monitor;

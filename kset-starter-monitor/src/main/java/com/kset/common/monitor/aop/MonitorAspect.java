@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.aop;
+package com.kset.common.monitor.aop;
 
 import com.kset.common.monitor.Monitor;
 import com.kset.common.monitor.facade.MonitorStatus;

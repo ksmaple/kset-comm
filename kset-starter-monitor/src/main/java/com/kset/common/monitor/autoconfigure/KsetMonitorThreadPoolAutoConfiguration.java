@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.autoconfigure;
+package com.kset.common.monitor.autoconfigure;
 
 import com.kset.common.utils.thread.KsetThreadPoolFactory;
 import com.kset.common.utils.thread.MdcThreadPoolTraceAdapter;

@@ -1,4 +1,4 @@
-﻿package com.kset.redis.monitor;
+package com.kset.redis.monitor;
 
 import com.kset.common.monitor.facade.MonitorTypes;
 import com.kset.common.monitor.interceptor.FrameworkInterceptor;

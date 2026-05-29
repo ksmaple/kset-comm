@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.web;
+package com.kset.common.monitor.web;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.common.monitor.Monitor;

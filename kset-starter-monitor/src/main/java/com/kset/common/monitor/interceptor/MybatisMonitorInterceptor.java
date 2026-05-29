@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.interceptor;
+package com.kset.common.monitor.interceptor;
 
 import com.kset.common.monitor.Monitor;
 import com.kset.common.monitor.facade.MonitorStatus;

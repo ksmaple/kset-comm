@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.backend;
+package com.kset.common.monitor.backend;
 
 import com.kset.common.monitor.facade.CompletedTransaction;
 import com.kset.common.monitor.facade.MonitorEvent;

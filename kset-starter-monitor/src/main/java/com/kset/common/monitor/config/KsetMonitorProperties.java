@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.config;
+package com.kset.common.monitor.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

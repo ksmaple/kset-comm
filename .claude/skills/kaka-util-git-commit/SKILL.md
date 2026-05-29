@@ -1,4 +1,4 @@
-﻿---
+---
 name: kaka-util-git-commit
 description: 极简 Git 提交：分支、中文 commit；功能名与提交标题仅据变更路径列表推断，不读 diff/文件内容。触发：(1) git commit (2) 特性分支 (3) 中文提交 (4) 明确要求 push。
 ---

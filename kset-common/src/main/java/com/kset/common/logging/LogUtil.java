@@ -57,9 +57,10 @@ public final class LogUtil {
 
     public static void error(Logger log, String message, Throwable t, Object... kvs) {
         if (log.isErrorEnabled()) {
-            Object[] args = new Object[kvs.length + 1];
-            System.arraycopy(toArgs(kvs), 0, args, 0, kvs.length);
-            args[kvs.length] = t;
+            Object[] structuredArgs = toArgs(kvs);
+            Object[] args = new Object[structuredArgs.length + 1];
+            System.arraycopy(structuredArgs, 0, args, 0, structuredArgs.length);
+            args[structuredArgs.length] = t;
             log.error(message, args);
         }
     }

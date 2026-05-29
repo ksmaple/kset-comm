@@ -1,4 +1,4 @@
-﻿package com.kset.common.monitor.gateway;
+package com.kset.common.monitor.gateway;
 
 import com.kset.cloud.config.KsetCloudProperties;
 import com.kset.common.monitor.GatewayTraceBinding;

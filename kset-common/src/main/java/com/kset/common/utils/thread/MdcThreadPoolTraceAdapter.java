@@ -1,4 +1,4 @@
-﻿package com.kset.common.utils.thread;
+package com.kset.common.utils.thread;
 
 import com.kset.common.monitor.Monitor;
 import com.kset.common.monitor.TraceSnapshot;
