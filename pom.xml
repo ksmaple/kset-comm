@@ -30,6 +30,7 @@
         <module>kset-cloud</module>
         <module>kset-starter-web</module>
         <module>kset-starter-mysql</module>
+        <module>kset-starter-cache</module>
         <module>kset-starter-redis</module>
         <module>kset-starter-nacos</module>
         <module>kset-starter-sentinel</module>

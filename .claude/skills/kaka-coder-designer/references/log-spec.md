@@ -1,7 +1,7 @@
 # Log 域规范
 
-L001: traceId 与 API X-Trace-Id 一致；**写入 MDC 由 `com.kset.common.monitor.Monitor` 负责**，logging 包只通过 logback `%X{traceId}` 消费，不在 logging 自建 TraceContext  
-L002: 结构化 JSON 日志，含 level、traceId、spanId、logger、message、timestamp；可选 grayTag、operator、flow.*  
+L001: traceId 与 API X-Trace-Id 一致  
+L002: 结构化 JSON 日志，含 level、traceId、logger、message、timestamp  
 L003: HTTP 慢接口阈值大于 500ms 记 WARN，含 URL、Method、参数摘要  
 L004: SQL 慢查询阈值大于 200ms 记 WARN，含 SQL、参数、返回行数  
 L005: 外部 HTTP 慢调用阈值大于 1000ms 记 WARN  

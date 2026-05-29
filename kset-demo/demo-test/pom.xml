@@ -31,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>
+            <artifactId>kset-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kset</groupId>
             <artifactId>kset-starter-redis</artifactId>
         </dependency>
         <dependency>

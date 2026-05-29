@@ -110,6 +110,11 @@
             </dependency>
             <dependency>
                 <groupId>com.kset</groupId>
+                <artifactId>kset-starter-cache</artifactId>
+                <version>${kset-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kset</groupId>
                 <artifactId>kset-starter-redis</artifactId>
                 <version>${kset-starter.version}</version>
             </dependency>
