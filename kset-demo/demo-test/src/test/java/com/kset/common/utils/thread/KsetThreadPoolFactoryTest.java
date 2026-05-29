@@ -402,12 +402,12 @@ public class KsetThreadPoolFactoryTest {
                 .traceContextAdapter(adapter)
                 .build());
 
-        // 设置当前线程 traceId
+        
         adapter.setTraceId("trace-123");
 
         CountDownLatch latch = new CountDownLatch(1);
         factory.execute("test-trace", () -> {
-            // 执行线程中应能获取到传递的 traceId
+            
             capturedTraceId.set(adapter.getTraceId());
             latch.countDown();
         });

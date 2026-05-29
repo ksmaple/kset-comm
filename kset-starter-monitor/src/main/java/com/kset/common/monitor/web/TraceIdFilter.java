@@ -13,9 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-/**
- * TraceID 链路追踪过滤器（由 kset-starter-monitor 自动注册）。
- */
+
 public class TraceIdFilter implements Filter {
 
     @Override

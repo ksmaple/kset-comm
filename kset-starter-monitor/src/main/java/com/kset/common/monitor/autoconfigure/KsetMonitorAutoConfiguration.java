@@ -11,9 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-/**
- * 全链路监控入口：引入本 starter 后按 classpath 自动装配 Servlet / Dubbo / Gateway / 线程池链路能力。
- */
+
 @AutoConfiguration
 @ConditionalOnProperty(prefix = "kset.monitor", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties({KsetMonitorProperties.class, KsetCloudProperties.class})
@@ -23,6 +21,7 @@ import org.springframework.context.annotation.Import;
         KsetMonitorServletAutoConfiguration.class,
         KsetMonitorDubboAutoConfiguration.class,
         KsetMonitorGatewayAutoConfiguration.class,
+        KsetMonitorHttpClientAutoConfiguration.class,
         KsetMonitorThreadPoolAutoConfiguration.class,
         KsetMonitorAsyncAutoConfiguration.class
 })
@@ -33,10 +32,13 @@ public class KsetMonitorAutoConfiguration {
     @Bean
     ApplicationRunner ksetMonitorStartupLogger(KsetMonitorProperties properties) {
         return args -> log.info(
-                "[kset-monitor] Full-link monitoring active (servlet.trace={}, dubbo={}, gateway.trace={}, threadPool.trace={})",
-                properties.getServlet().isTraceEnabled(),
+                "[kset-monitor] Full-link monitoring active (web={}, dubbo={}, gateway={}, mybatis={}, httpClient={}, redis={}, threadPool={})",
+                properties.getWeb().isEnabled(),
                 properties.getDubbo().isEnabled(),
-                properties.getGateway().isTraceEnabled(),
-                properties.getThreadPool().isTracePropagationEnabled());
+                properties.getGateway().isEnabled() && properties.getGateway().isTraceEnabled(),
+                properties.getMybatis().isEnabled(),
+                properties.getHttpClient().isEnabled(),
+                properties.getRedis().isEnabled(),
+                properties.getThreadPool().isEnabled());
     }
 }

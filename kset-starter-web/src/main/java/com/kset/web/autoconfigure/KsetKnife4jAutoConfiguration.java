@@ -13,11 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
-/**
- * Knife4j / OpenAPI 3 自动配置（基于 knife4j-openapi3-jakarta-spring-boot-starter）。
- *
- * <p>开关使用 Knife4j 标准 {@code knife4j.enable}；分组路径优先 {@code springdoc.group-configs[0].paths-to-match}。</p>
- */
+
 @AutoConfiguration
 @ConditionalOnClass(name = "com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration")
 @ConditionalOnProperty(name = "knife4j.enable", havingValue = "true", matchIfMissing = true)

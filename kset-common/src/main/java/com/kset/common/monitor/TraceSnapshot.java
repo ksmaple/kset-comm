@@ -1,8 +1,6 @@
 package com.kset.common.monitor;
 
-/**
- * 可跨线程传递的链路上下文快照。
- */
+
 public final class TraceSnapshot {
 
     private final String traceId;

@@ -21,10 +21,9 @@ public class MonitorBackendConfiguration {
     @ConditionalOnMissingBean
     public MonitorBackend monitorBackend(KsetMonitorProperties properties) {
         String backend = properties.getBackend() != null ? properties.getBackend().trim().toLowerCase() : "log";
-        long warnMs = properties.getSlowLog().getTransactionWarnMs();
         if (!"log".equals(backend)) {
             log.warn("kset.monitor.backend={} is not supported yet; using local LogBackend", backend);
         }
-        return new LogBackend(warnMs);
+        return new LogBackend();
     }
 }

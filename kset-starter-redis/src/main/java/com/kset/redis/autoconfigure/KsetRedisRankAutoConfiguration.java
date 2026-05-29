@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
@@ -13,7 +14,10 @@ public class KsetRedisRankAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public KsetRedisRankService ksetRedisRankService(RedisTemplate<String, Object> redisTemplate) {
-        return KsetRedisRankService.builder(redisTemplate).build();
+    public KsetRedisRankService ksetRedisRankService(RedisTemplate<String, Object> redisTemplate,
+                                                     Environment environment) {
+        return KsetRedisRankService.builder(redisTemplate)
+                .monitorEnabled(KsetRedisServiceAutoConfiguration.monitorEnabled(environment))
+                .build();
     }
 }

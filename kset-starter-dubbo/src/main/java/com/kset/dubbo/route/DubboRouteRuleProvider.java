@@ -5,9 +5,7 @@ import com.kset.cloud.spi.CloudRuleProvider;
 import com.kset.cloud.spi.CloudRuleType;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Dubbo 路由规则 Nacos 变更处理器
- */
+
 @Slf4j
 public class DubboRouteRuleProvider implements CloudRuleProvider {
 

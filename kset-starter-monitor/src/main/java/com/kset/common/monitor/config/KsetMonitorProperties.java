@@ -2,9 +2,7 @@ package com.kset.common.monitor.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * 全链路监控配置（引入 starter-monitor 后默认开启）。
- */
+
 @ConfigurationProperties(prefix = "kset.monitor")
 public class KsetMonitorProperties {
 
@@ -14,12 +12,15 @@ public class KsetMonitorProperties {
 
     private final SamplerConfig sampler = new SamplerConfig();
     private final Reporter reporter = new Reporter();
+    private final Web web = new Web();
     private final Servlet servlet = new Servlet();
     private final Dubbo dubbo = new Dubbo();
     private final Gateway gateway = new Gateway();
+    private final Mybatis mybatis = new Mybatis();
+    private final HttpClient httpClient = new HttpClient();
+    private final Redis redis = new Redis();
     private final ThreadPool threadPool = new ThreadPool();
     private final Async async = new Async();
-    private final SlowLog slowLog = new SlowLog();
 
     public boolean isEnabled() {
         return enabled;
@@ -45,6 +46,10 @@ public class KsetMonitorProperties {
         return reporter;
     }
 
+    public Web getWeb() {
+        return web;
+    }
+
     public Servlet getServlet() {
         return servlet;
     }
@@ -57,6 +62,18 @@ public class KsetMonitorProperties {
         return gateway;
     }
 
+    public Mybatis getMybatis() {
+        return mybatis;
+    }
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public Redis getRedis() {
+        return redis;
+    }
+
     public ThreadPool getThreadPool() {
         return threadPool;
     }
@@ -65,8 +82,16 @@ public class KsetMonitorProperties {
         return async;
     }
 
-    public SlowLog getSlowLog() {
-        return slowLog;
+    public static class Web {
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
     }
 
     public static class Servlet {
@@ -103,7 +128,16 @@ public class KsetMonitorProperties {
     }
 
     public static class Gateway {
+        private boolean enabled = true;
         private boolean traceEnabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
 
         public boolean isTraceEnabled() {
             return traceEnabled;
@@ -114,8 +148,53 @@ public class KsetMonitorProperties {
         }
     }
 
+    public static class Mybatis {
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    public static class HttpClient {
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    public static class Redis {
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
     public static class ThreadPool {
+        private boolean enabled = true;
         private boolean tracePropagationEnabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
 
         public boolean isTracePropagationEnabled() {
             return tracePropagationEnabled;
@@ -135,18 +214,6 @@ public class KsetMonitorProperties {
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
-        }
-    }
-
-    public static class SlowLog {
-        private long transactionWarnMs = 500;
-
-        public long getTransactionWarnMs() {
-            return transactionWarnMs;
-        }
-
-        public void setTransactionWarnMs(long transactionWarnMs) {
-            this.transactionWarnMs = transactionWarnMs;
         }
     }
 

@@ -10,51 +10,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * 工程控制论驱动的自适应线程池。
- *
- * <p>在标准 {@link ThreadPoolExecutor} 基础上增加以下能力：</p>
- * <ul>
- *   <li><b>全链路指标采集</b>：提交量、完成量、失败量、拒绝量、
- *       执行耗时分布（avg/min/max/p99）、等待耗时、吞吐量</li>
- *   <li><b>动态参数调整</b>：运行时可修改 corePoolSize、maximumPoolSize、targetLatency 等</li>
- *   <li><b>闭环反馈控制</b>：以目标延迟为设定点（Set Point），基于实际延迟误差自动调节线程数，
- *       同时具备死区（Dead Zone）、速率限制（Rate Limit）、安全边界等控制工程要素</li>
- *   <li><b>任务优先级调度</b>：可选启用优先级队列，高优先级任务优先执行（相同优先级 FIFO）</li>
- * </ul>
- *
- * <p><b>控制论模型</b></p>
- * <pre>
- *   设定点(SP) : targetLatencyMs
- *   过程变量(PV): avgExecutionTimeMs（滑动窗口平均）
- *   误差(E)    : PV - SP
- *   控制量(U)  : corePoolSize / maximumPoolSize 增量
- *   调节律     : 死区 + 比例增量 + 上下限饱和
- * </pre>
- *
- * <p><b>拒绝策略触发时机</b></p>
- * <pre>
- *   ThreadPoolExecutor.execute() 决策链：
- *   1. 线程池已关闭(isShutdown)          --→ 直接触发拒绝策略
- *   2. 当前线程数 &lt; corePoolSize         --→ 创建新线程执行任务
- *   3. 队列未满(offer=true)               --→ 任务入队等待
- *   4. 当前线程数 &lt; maximumPoolSize      --→ 创建新线程执行任务
- *   5. 队列已满且线程数 &gt;= maximumPoolSize --→ 触发拒绝策略
- *
- *   关键点：本线程池使用有界队列（ArrayBlockingQueue / BoundedPriorityBlockingQueue），
- *   队列容量 = queueCapacity。队列满时 offer() 返回 false，线程池才会尝试创建超过
- *   corePoolSize 的线程，直到达到 maximumPoolSize。两者都满时触发拒绝策略。
- *
- *   各策略行为：
- *   - AbortPolicy（默认）: 抛出 RejectedExecutionException，任务丢失，调用者感知
- *   - CallerRunsPolicy   : 由提交任务的调用者线程直接执行 r.run()，任务不丢失（降级执行）
- *   - DiscardPolicy      : 静默丢弃，无任何反馈，任务丢失，调用者无感知
- *   - DiscardOldestPolicy: 丢弃队列中最旧任务，重新尝试提交当前任务，最旧任务丢失
- *
- *   所有策略触发时均通过 MetricsRejectedHandler 打印结构化日志（含 poolSize/active/queue/completed/totalRejected）。
- *   CallerRunsPolicy 打印 INFO 级别，其余策略打印 WARNING 级别。
- * </pre>
- */
+
 @Slf4j
 public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
 
@@ -75,15 +31,15 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
     // ========== 控制论调节参数 ==========
     /** 延迟死区比例：|误差| 小于此比例时不触发调节，避免系统振荡 */
     private static final double DEAD_ZONE_RATIO = 0.25;
-    /** 单次最大调节线程数（速率限制，防止超调） */
+    
     private static final int MAX_SINGLE_DELTA = 10;
-    /** 单次最小调节线程数 */
+    
     private static final int MIN_SINGLE_DELTA = 1;
     /** 缩容安全条件：队列使用率必须低于此值 */
     private static final double SHRINK_QUEUE_THRESHOLD = 0.3;
-    /** 拒绝率超过此阈值时触发最大线程数扩容 */
+    
     private static final double REJECTION_RATE_THRESHOLD = 0.01;
-    /** 最大线程数单次扩容比例上限 */
+    
     private static final double MAX_POOL_EXPAND_RATIO = 1.3;
 
     // ========== 实例属性 ==========
@@ -122,7 +78,7 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
     private volatile ThreadPoolReporter reporter;
     private volatile java.util.function.Supplier<String> traceIdSupplier;
 
-    // ========== 链路上下文适配器 ==========
+    
     private volatile ThreadPoolTraceAdapter traceContextAdapter;
 
     // ========== 优先级序列号生成器 ==========
@@ -427,10 +383,7 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
         return new Builder(poolName);
     }
 
-    /**
-     * IO 密集型场景预设（网络/磁盘 IO 为主，线程等待时间长）。
-     * <p>推荐：core = CPU * 2, max = CPU * 4, 较大队列, 自动调优</p>
-     */
+    
     public static Builder forIoBound(String poolName) {
         int processors = Runtime.getRuntime().availableProcessors();
         return newBuilder(poolName)
@@ -441,10 +394,7 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
                 .autoTuneEnabled(true);
     }
 
-    /**
-     * CPU 密集型场景预设（计算为主，线程数不宜过多）。
-     * <p>推荐：core = CPU, max = CPU + 1, 较小队列, 自动调优</p>
-     */
+    
     public static Builder forCpuBound(String poolName) {
         int processors = Runtime.getRuntime().availableProcessors();
         return newBuilder(poolName)
@@ -609,7 +559,7 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
         }
     }
 
-    // ========== execute / submit 路径 ==========
+    
 
     @Override
     public void execute(Runnable command) {
@@ -768,76 +718,80 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
 
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
-        Long start = startTimeHolder.get();
         String traceId = getTraceId(r);
-        if (start != null) {
+        try {
+            Long start = startTimeHolder.get();
+            if (start != null) {
+                long executionTime = System.currentTimeMillis() - start;
+
+                boolean success = (t == null);
+                Runnable delegate = null;
+
+                if (r instanceof PriorityRunnable) {
+                    delegate = ((PriorityRunnable) r).delegate;
+                }
+
+                if (delegate instanceof FutureTask) {
+                    FutureTask<?> task = (FutureTask<?>) delegate;
+                    if (task.isDone() && !task.isCancelled()) {
+                        try {
+                            task.get();
+                        } catch (ExecutionException ee) {
+                            success = false;
+                        } catch (InterruptedException | CancellationException e) {
+                            // ignore
+                        }
+                    }
+                } else if (r instanceof PriorityFutureTask) {
+                    PriorityFutureTask<?> task = (PriorityFutureTask<?>) r;
+                    if (task.isDone() && !task.isCancelled()) {
+                        try {
+                            task.get();
+                        } catch (ExecutionException ee) {
+                            success = false;
+                        } catch (InterruptedException | CancellationException e) {
+                            // ignore
+                        }
+                    }
+                } else if (r instanceof TimedFutureTask) {
+                    TimedFutureTask<?> task = (TimedFutureTask<?>) r;
+                    if (task.isDone() && !task.isCancelled()) {
+                        try {
+                            task.get();
+                        } catch (ExecutionException ee) {
+                            success = false;
+                        } catch (InterruptedException | CancellationException e) {
+                            // ignore
+                        }
+                    }
+                }
+
+                if (!success) {
+                    failedCounter.incrementAndGet();
+                }
+
+                Long wait = waitTimeHolder.get();
+                long waitTime = wait != null ? wait : 0;
+
+                recordExecution(executionTime, success, waitTime);
+                completedCounter.incrementAndGet();
+
+                if (reporter != null) {
+                    reporter.onTaskCompleted(poolName, traceId, unwrapOriginal(r), executionTime, success);
+                }
+            }
+            if (t != null && reporter != null) {
+                reporter.onError(poolName, traceId, unwrapOriginal(r), t);
+            }
+        } finally {
             startTimeHolder.remove();
-            long executionTime = System.currentTimeMillis() - start;
-
-            boolean success = (t == null);
-            Runnable delegate = null;
-
-            if (r instanceof PriorityRunnable) {
-                delegate = ((PriorityRunnable) r).delegate;
-            }
-
-            if (delegate instanceof FutureTask) {
-                FutureTask<?> task = (FutureTask<?>) delegate;
-                if (task.isDone() && !task.isCancelled()) {
-                    try {
-                        task.get();
-                    } catch (ExecutionException ee) {
-                        success = false;
-                    } catch (InterruptedException | CancellationException e) {
-                        // ignore
-                    }
-                }
-            } else if (r instanceof PriorityFutureTask) {
-                PriorityFutureTask<?> task = (PriorityFutureTask<?>) r;
-                if (task.isDone() && !task.isCancelled()) {
-                    try {
-                        task.get();
-                    } catch (ExecutionException ee) {
-                        success = false;
-                    } catch (InterruptedException | CancellationException e) {
-                        // ignore
-                    }
-                }
-            } else if (r instanceof TimedFutureTask) {
-                TimedFutureTask<?> task = (TimedFutureTask<?>) r;
-                if (task.isDone() && !task.isCancelled()) {
-                    try {
-                        task.get();
-                    } catch (ExecutionException ee) {
-                        success = false;
-                    } catch (InterruptedException | CancellationException e) {
-                        // ignore
-                    }
-                }
-            }
-
-            if (!success) {
-                failedCounter.incrementAndGet();
-            }
-
-            Long wait = waitTimeHolder.get();
-            long waitTime = wait != null ? wait : 0;
             waitTimeHolder.remove();
-
-            recordExecution(executionTime, success, waitTime);
-            completedCounter.incrementAndGet();
-
-            if (reporter != null) {
-                reporter.onTaskCompleted(poolName, traceId, unwrapOriginal(r), executionTime, success);
+            currentFutureTask.remove();
+            if (traceContextAdapter != null) {
+                traceContextAdapter.clear();
             }
+            super.afterExecute(r, t);
         }
-        if (t != null && reporter != null) {
-            reporter.onError(poolName, traceId, unwrapOriginal(r), t);
-        }
-        if (traceContextAdapter != null) {
-            traceContextAdapter.clear();
-        }
-        super.afterExecute(r, t);
     }
 
     // ========== 指标记录与查询 ==========
@@ -848,9 +802,7 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
         windowBuffer[pos] = new ExecutionRecord(executionTimeMs, success, waitTimeMs);
     }
 
-    /**
-     * 获取当前线程池指标快照。
-     */
+    
     public ThreadPoolMetrics getMetrics() {
         updateThroughput();
 
@@ -1023,9 +975,7 @@ public class KsetThreadPoolExecutor extends ThreadPoolExecutor {
         log.info(String.format("[Pool-%s] Max pool size set to: %d", poolName, maximumPoolSize));
     }
 
-    /**
-     * 设置线程空闲存活时间（毫秒）。
-     */
+    
     public void setKeepAliveTimeMs(long keepAliveTimeMs) {
         super.setKeepAliveTime(keepAliveTimeMs, TimeUnit.MILLISECONDS);
         log.info(String.format("[Pool-%s] Keep alive time set to: %dms", poolName, keepAliveTimeMs));

@@ -12,6 +12,7 @@ public final class MonitorTypes {
     public static final String MQ = "MQ";
     public static final String BIZ = "Biz";
     public static final String HTTP_CLIENT = "HttpClient";
+    public static final String THREAD_POOL = "ThreadPool";
     public static final String ERROR = "Error";
 
     private MonitorTypes() {

@@ -7,12 +7,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * 线程池运行时指标快照。
- *
- * <p>涵盖实时状态、累计统计、耗时分布及控制论反馈信息，
- * 可用于监控大屏、告警规则、动态调参决策等场景。</p>
- */
+
 @Data
 @Builder
 public class ThreadPoolMetrics implements Serializable {

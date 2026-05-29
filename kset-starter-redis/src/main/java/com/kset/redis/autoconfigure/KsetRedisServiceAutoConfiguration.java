@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
@@ -44,7 +45,11 @@ public class KsetRedisServiceAutoConfiguration {
     @ConditionalOnMissingBean(name = "ksetRedisService")
     public KsetRedisService ksetRedisService(RedisTemplate<String, Object> redisTemplate,
                                              KsetRedisTtlPolicy ttlPolicy,
-                                             KsetRedisStreamSettings streamSettings) {
+                                             KsetRedisStreamSettings streamSettings,
+                                             Environment environment) {
+        if (monitorEnabled(environment)) {
+            return KsetRedisService.monitoredFrom(KsetRedisRegistry.PRIMARY_NAME, redisTemplate, ttlPolicy, streamSettings);
+        }
         return KsetRedisService.from(redisTemplate, ttlPolicy, streamSettings);
     }
 
@@ -52,8 +57,9 @@ public class KsetRedisServiceAutoConfiguration {
     @ConditionalOnBean(KsetRedissonLockProvider.class)
     @ConditionalOnMissingBean
     public KsetRedisLockExecutor ksetRedisLockExecutor(KsetRedissonLockProvider lockProvider,
-                                                       KsetRedisTtlPolicy ttlPolicy) {
-        return new KsetRedisLockExecutor(lockProvider, ttlPolicy);
+                                                       KsetRedisTtlPolicy ttlPolicy,
+                                                       Environment environment) {
+        return new KsetRedisLockExecutor(lockProvider, ttlPolicy, monitorEnabled(environment));
     }
 
     @Bean
@@ -63,5 +69,10 @@ public class KsetRedisServiceAutoConfiguration {
                                                  ObjectProvider<KsetRedisNamedSources> namedSources,
                                                  ObjectProvider<KsetRedisLockExecutor> lockExecutor) {
         return new KsetRedisBootstrap(registry, ksetRedisService, namedSources, lockExecutor);
+    }
+
+    static boolean monitorEnabled(Environment environment) {
+        return environment.getProperty("kset.monitor.enabled", Boolean.class, true)
+                && environment.getProperty("kset.monitor.redis.enabled", Boolean.class, true);
     }
 }

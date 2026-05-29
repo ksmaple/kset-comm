@@ -20,9 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Gateway 动态路由规则处理器（diff 刷新，删除已下线路由）。
- */
+
 @Slf4j
 public class GatewayRouteRuleProvider implements CloudRuleProvider {
 

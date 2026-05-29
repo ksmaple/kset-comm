@@ -28,10 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * 默认监控门面：MDC 链路上下文 + Transaction 栈 + 可插拔 {@link MonitorBackend}。
- * 未引入 starter 时由 {@link com.kset.common.monitor.Monitor} 以内置 {@link com.kset.common.monitor.backend.LogBackend} 实例化。
- */
+
 public final class DefaultMonitorFacade implements MonitorFacade {
 
     private final MonitorBackend backend;
@@ -244,7 +241,11 @@ public final class DefaultMonitorFacade implements MonitorFacade {
 
     private void completeTransaction(ActiveTransaction active) {
         Deque<ActiveTransaction> stack = transactionStack.get();
-        if (stack.isEmpty() || stack.peek() != active) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (stack.peek() != active) {
+            stack.remove(active);
             return;
         }
         stack.pop();

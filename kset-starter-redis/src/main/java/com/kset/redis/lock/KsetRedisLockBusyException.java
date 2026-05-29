@@ -1,7 +1,7 @@
 package com.kset.redis.lock;
 
 /**
- * ???????????
+ * Thrown when a lock cannot be acquired immediately.
  */
 public class KsetRedisLockBusyException extends KsetRedisLockException {
 

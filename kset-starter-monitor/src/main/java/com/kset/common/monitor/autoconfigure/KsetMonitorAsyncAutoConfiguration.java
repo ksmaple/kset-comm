@@ -10,9 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-/**
- * {@code @Async} 链路上下文传播：为 Spring 托管的 {@link org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor} 注入 TaskDecorator。
- */
+
 @AutoConfiguration
 @ConditionalOnClass(EnableAsync.class)
 @ConditionalOnProperty(prefix = "kset.monitor", name = "enabled", havingValue = "true", matchIfMissing = true)

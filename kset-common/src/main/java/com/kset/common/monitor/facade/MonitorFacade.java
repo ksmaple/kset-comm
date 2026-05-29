@@ -7,9 +7,7 @@ import com.kset.common.monitor.TraceSnapshot;
 
 import java.util.Optional;
 
-/**
- * 统一监控门面：链路上下文传播 + CAT 风格 Transaction/Event/Metric。
- */
+
 public interface MonitorFacade {
 
     Optional<String> currentTraceId();

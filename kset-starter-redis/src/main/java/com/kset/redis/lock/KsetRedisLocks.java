@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * ?????????Redisson???????? Bootstrap ?? {@link KsetRedisLockExecutor}?
+ * Static facade for Redis lock operations.
  */
 public final class KsetRedisLocks {
 

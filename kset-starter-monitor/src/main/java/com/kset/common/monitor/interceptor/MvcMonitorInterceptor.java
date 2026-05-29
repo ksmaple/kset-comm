@@ -27,8 +27,12 @@ public class MvcMonitorInterceptor implements HandlerInterceptor {
         }
         String txName = request.getMethod() + " " + request.getRequestURI();
         MonitorTransaction tx = Monitor.newTransaction(MonitorTypes.URL, txName);
+        tx.addData("component", "web");
+        tx.addData("method", request.getMethod());
+        tx.addData("uri", request.getRequestURI());
         request.setAttribute(TX_ATTRIBUTE, tx);
         InvocationContext ctx = new InvocationContext("MVC", MonitorTypes.URL, txName);
+        ctx.setAttribute("component", "web");
         ctx.setAttribute("method", request.getMethod());
         ctx.setAttribute("uri", request.getRequestURI());
         MonitorInterceptorRegistry.notifyBefore(ctx);
@@ -47,9 +51,11 @@ public class MvcMonitorInterceptor implements HandlerInterceptor {
         if (txObj instanceof MonitorTransaction tx) {
             if (ex != null) {
                 tx.setStatus(ex);
+                tx.addData("status", String.valueOf(response.getStatus()));
                 Monitor.logError(ex, tx.getName());
             } else {
                 tx.setStatus(MonitorStatus.SUCCESS);
+                tx.addData("status", String.valueOf(response.getStatus()));
             }
             tx.close();
         }

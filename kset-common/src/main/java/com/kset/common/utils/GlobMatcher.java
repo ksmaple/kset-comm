@@ -12,13 +12,7 @@ public class GlobMatcher {
     private GlobMatcher() {
     }
 
-    /**
-     * 判断路径是否匹配任意一个 glob 模式（逗号分隔）
-     *
-     * @param path     文件路径
-     * @param patterns 逗号分隔的 glob 模式，如 ".git/,.gitignore,*.tmp"
-     * @return true 表示匹配（应被忽略）
-     */
+    
     public static boolean matches(String path, String patterns) {
         if (path == null || patterns == null || patterns.isBlank()) {
             return false;

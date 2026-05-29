@@ -3,7 +3,7 @@ package com.kset.redis.lock;
 import java.time.Duration;
 
 /**
- * ??????????
+ * Thrown when a lock cannot be acquired before the configured wait timeout.
  */
 public class KsetRedisLockTimeoutException extends KsetRedisLockException {
 

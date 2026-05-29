@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-/**
- * 基于灰度标签与权重配置的 Dubbo 路由
- */
+
 @Activate(order = 1)
 public class KsetTagRouterFactory implements RouterFactory {
 

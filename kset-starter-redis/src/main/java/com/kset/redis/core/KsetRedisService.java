@@ -51,6 +51,14 @@ public class KsetRedisService implements KsetRedisOperations {
                 new KsetRedisTemplateOperations(name, template, ttlPolicy, streamSettings));
     }
 
+    public static KsetRedisService monitoredFrom(String name,
+                                                 RedisTemplate<String, Object> template,
+                                                 KsetRedisTtlPolicy ttlPolicy,
+                                                 KsetRedisStreamSettings streamSettings) {
+        KsetRedisOperations operations = new KsetRedisTemplateOperations(name, template, ttlPolicy, streamSettings);
+        return new KsetRedisService(name, com.kset.redis.monitor.KsetRedisMonitor.wrapOperations(operations));
+    }
+
     public String getName() {
         return name;
     }

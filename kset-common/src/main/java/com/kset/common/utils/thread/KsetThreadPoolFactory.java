@@ -10,25 +10,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * 线程池工厂，对外提供统一入口。
- *
- * <p>按业务名称隔离线程池，首次调用时自动懒创建。使用方式与单个线程池保持一致：</p>
- * <pre>
- * // 简单执行（自动创建默认配置线程池）
- * KsetThreadPoolFactory.getInstance().execute("order-payment", () -> { ... });
- *
- * // 预注册自定义配置
- * KsetThreadPoolFactory.getInstance().register("order-push",
- *     KsetThreadPoolFactory.PoolConfig.lowLatencyConfig());
- *
- * // 带优先级执行
- * KsetThreadPoolFactory.getInstance().execute("order-push", () -> { ... }, 10);
- *
- * // 查看指标
- * ThreadPoolMetrics metrics = KsetThreadPoolFactory.getInstance().getMetrics("order-payment");
- * </pre>
- */
+
 @Slf4j
 public class KsetThreadPoolFactory {
 
@@ -40,7 +22,7 @@ public class KsetThreadPoolFactory {
     private volatile PoolConfig defaultConfig = PoolConfig.defaultConfig();
     private final AtomicBoolean globalShutdown = new AtomicBoolean(false);
 
-    // 全局上报器和链路上下文适配器（所有线程池共享）
+    
     private volatile ThreadPoolReporter globalReporter;
     private volatile ThreadPoolTraceAdapter globalTraceContextAdapter;
 
@@ -74,17 +56,13 @@ public class KsetThreadPoolFactory {
                 defaultConfig.getCorePoolSize(), defaultConfig.getMaximumPoolSize()));
     }
 
-    /**
-     * 设置全局上报器（所有线程池共享同一上报实例）。
-     */
+    
     public void setGlobalReporter(ThreadPoolReporter reporter) {
         this.globalReporter = reporter;
         log.info(String.format("[Factory] Global reporter set: %b", reporter != null));
     }
 
-    /**
-     * 设置全局链路上下文适配器（所有线程池共享）。
-     */
+    
     public void setGlobalTraceContextAdapter(ThreadPoolTraceAdapter adapter) {
         this.globalTraceContextAdapter = adapter;
         log.info(String.format("[Factory] Global trace adapter set: %b", adapter != null));
@@ -100,9 +78,7 @@ public class KsetThreadPoolFactory {
         }
     }
 
-    /**
-     * 为指定业务设置链路上下文适配器（覆盖全局设置）。
-     */
+    
     public void setTraceContextAdapter(String bizName, ThreadPoolTraceAdapter adapter) {
         KsetThreadPoolExecutor pool = getPool(bizName);
         if (pool != null) {
@@ -112,9 +88,7 @@ public class KsetThreadPoolFactory {
 
     // ========== execute 系列 ==========
 
-    /**
-     * 执行业务任务（懒创建线程池）。
-     */
+    
     public void execute(String bizName, Runnable task) {
         getOrCreatePool(bizName).execute(task);
     }
@@ -194,9 +168,7 @@ public class KsetThreadPoolFactory {
 
     // ========== 指标查询 ==========
 
-    /**
-     * 获取指定业务的线程池指标。
-     */
+    
     public ThreadPoolMetrics getMetrics(String bizName) {
         KsetThreadPoolExecutor pool = getPool(bizName);
         return pool != null ? pool.getMetrics() : null;
@@ -212,16 +184,12 @@ public class KsetThreadPoolFactory {
         }
     }
 
-    /**
-     * 手动触发所有业务线程池指标全量上报。
-     */
+    
     public void reportAllMetrics() {
         pools.forEach((k, v) -> v.reportMetrics());
     }
 
-    /**
-     * 获取所有业务线程池指标。
-     */
+    
     public Map<String, ThreadPoolMetrics> getAllMetrics() {
         Map<String, ThreadPoolMetrics> result = new HashMap<>();
         pools.forEach((k, v) -> result.put(k, v.getMetrics()));

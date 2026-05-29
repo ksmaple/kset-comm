@@ -1,7 +1,7 @@
 package com.kset.redis.lock;
 
 /**
- * ?????????
+ * Base Redis lock runtime exception.
  */
 public class KsetRedisLockException extends RuntimeException {
 

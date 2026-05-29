@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 /**
- * ?????????????????
+ * Lock acquisition options.
  */
 public final class KsetRedisLockOptions {
 

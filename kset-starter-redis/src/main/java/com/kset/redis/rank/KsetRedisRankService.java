@@ -6,6 +6,7 @@ import com.kset.redis.rank.internal.KsetRedisRankKeys;
 import com.kset.redis.rank.internal.KsetRedisZSetGroupRankBoard;
 import com.kset.redis.rank.internal.KsetRedisZSetRankBoard;
 import com.kset.redis.rank.group.KsetRedisGroupRankBoard;
+import com.kset.redis.monitor.KsetRedisMonitor;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
@@ -23,6 +24,7 @@ public class KsetRedisRankService {
 
     private final RedisTemplate<String, Object> template;
     private final String keyPrefix;
+    private final boolean monitorEnabled;
     private final ConcurrentMap<String, KsetRedisRankBoard> boards = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, KsetRedisGroupRankBoard> groupBoards = new ConcurrentHashMap<>();
 
@@ -35,9 +37,14 @@ public class KsetRedisRankService {
     }
 
     public KsetRedisRankService(RedisTemplate<String, Object> template, String keyPrefix) {
+        this(template, keyPrefix, false);
+    }
+
+    public KsetRedisRankService(RedisTemplate<String, Object> template, String keyPrefix, boolean monitorEnabled) {
         this.template = Objects.requireNonNull(template, "template");
         this.keyPrefix = KsetRedisKeys.normalizeTrailingColon(
                 keyPrefix != null ? keyPrefix : DEFAULT_KEY_PREFIX);
+        this.monitorEnabled = monitorEnabled;
     }
 
     public String keyPrefix() {
@@ -78,22 +85,24 @@ public class KsetRedisRankService {
 
     private KsetRedisRankBoard createBoard(KsetRedisRankOptions options) {
         String redisKey = options.resolveRedisKey(keyPrefix);
-        return new KsetRedisZSetRankBoard(
+        KsetRedisRankBoard board = new KsetRedisZSetRankBoard(
                 options.boardId(),
                 redisKey,
                 template,
                 options.order(),
                 options.ttl());
+        return monitorEnabled ? KsetRedisMonitor.wrapRankBoard(board) : board;
     }
 
     private KsetRedisGroupRankBoard createGroupBoard(KsetRedisRankOptions options) {
         KsetRedisRankKeys keys = KsetRedisRankKeys.forRoot(options.resolveRedisKey(keyPrefix));
-        return new KsetRedisZSetGroupRankBoard(
+        KsetRedisGroupRankBoard board = new KsetRedisZSetGroupRankBoard(
                 options.boardId(),
                 keys,
                 template,
                 options.order(),
                 options.ttl());
+        return monitorEnabled ? KsetRedisMonitor.wrapGroupRankBoard(board) : board;
     }
 
     private static String cacheKey(KsetRedisRankOptions options) {
@@ -107,6 +116,7 @@ public class KsetRedisRankService {
 
         private final RedisTemplate<String, Object> template;
         private String keyPrefix = DEFAULT_KEY_PREFIX;
+        private boolean monitorEnabled;
 
         private Builder(RedisTemplate<String, Object> template) {
             this.template = Objects.requireNonNull(template, "template");
@@ -117,8 +127,13 @@ public class KsetRedisRankService {
             return this;
         }
 
+        public Builder monitorEnabled(boolean monitorEnabled) {
+            this.monitorEnabled = monitorEnabled;
+            return this;
+        }
+
         public KsetRedisRankService build() {
-            return new KsetRedisRankService(template, keyPrefix);
+            return new KsetRedisRankService(template, keyPrefix, monitorEnabled);
         }
     }
 }

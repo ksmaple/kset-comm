@@ -201,7 +201,7 @@ public final class KsetRedisZSetRankBoard implements KsetRedisRankBoard {
         try {
             listener.onRankChanged(event);
         } catch (RuntimeException ignored) {
-            // 监听器异常不影响主流程
+            
         }
     }
 }

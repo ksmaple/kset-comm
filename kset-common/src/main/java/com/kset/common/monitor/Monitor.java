@@ -20,16 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-/**
- * 监控统一静态入口（CAT 风格门面）。
- * <p>
- * <b>链路上下文职责：</b>{@code traceId}、{@code spanId}、{@code grayTag} 由本类写入 SLF4J MDC，
- * 为分布式 trace 的唯一存储与传播入口；{@code com.kset.common.logging} 通过 logback 消费 MDC，
- * 不在 logging 包重复实现 trace 上下文。
- * <p>
- * 未引入 {@code kset-starter-monitor} 时，内置默认为 {@link LogBackend} 本地日志实现；
- * 引入 starter 后由 Spring 装配的 {@link DefaultMonitorFacade} 覆盖（可配置采样、异步上报等）。
- */
+
 public final class Monitor {
 
     private static volatile MonitorFacade facade = createBuiltinDefault();

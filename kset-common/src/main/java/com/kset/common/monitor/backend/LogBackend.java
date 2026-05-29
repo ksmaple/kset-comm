@@ -8,6 +8,8 @@ import com.kset.common.monitor.facade.MonitorStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * 默认本地日志后端：通过 SLF4J 输出到应用本地日志（Logback），慢事务/失败事务 WARN。
  */
@@ -17,14 +19,13 @@ public final class LogBackend implements MonitorBackend {
 
     public static final long DEFAULT_TRANSACTION_WARN_MS = 500L;
 
-    private final long transactionWarnMs;
-
     public LogBackend() {
-        this(DEFAULT_TRANSACTION_WARN_MS);
     }
 
     public LogBackend(long transactionWarnMs) {
-        this.transactionWarnMs = transactionWarnMs;
+    }
+
+    public LogBackend(long transactionWarnMs, Map<String, Long> transactionWarnMsByType) {
     }
 
     @Override
@@ -35,8 +36,7 @@ public final class LogBackend implements MonitorBackend {
     @Override
     public void completeTransaction(CompletedTransaction transaction) {
         String traceId = transaction.traceId().orElse("-");
-        if (transaction.durationMs() >= transactionWarnMs
-                || transaction.status() == MonitorStatus.FAIL) {
+        if (transaction.status() == MonitorStatus.FAIL) {
             log.warn("monitor-tx type={} name={} durationMs={} status={} parentType={} traceId={} data={}",
                     transaction.type(),
                     transaction.name(),
@@ -46,8 +46,14 @@ public final class LogBackend implements MonitorBackend {
                     traceId,
                     transaction.data());
         } else if (log.isDebugEnabled()) {
-            log.debug("monitor-tx type={} name={} durationMs={} traceId={}",
-                    transaction.type(), transaction.name(), transaction.durationMs(), traceId);
+            log.debug("monitor-tx type={} name={} durationMs={} status={} parentType={} traceId={} data={}",
+                    transaction.type(),
+                    transaction.name(),
+                    transaction.durationMs(),
+                    transaction.status(),
+                    transaction.parentType().orElse("-"),
+                    traceId,
+                    transaction.data());
         }
     }
 

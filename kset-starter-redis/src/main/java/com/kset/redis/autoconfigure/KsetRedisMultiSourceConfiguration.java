@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
@@ -36,7 +37,8 @@ public class KsetRedisMultiSourceConfiguration {
     public KsetRedisNamedSources ksetRedisNamedSources(KsetRedisProperties properties,
                                                        KsetRedisTtlPolicy ttlPolicy,
                                                        KsetRedisStreamSettings streamSettings,
-                                                       ConfigurableListableBeanFactory beanFactory) {
+                                                       ConfigurableListableBeanFactory beanFactory,
+                                                       Environment environment) {
         Map<String, KsetRedisProperties.RedisSourceProperties> sources = properties.getSources();
         if (sources == null || sources.isEmpty()) {
             return KsetRedisNamedSources.empty();
@@ -57,7 +59,9 @@ public class KsetRedisMultiSourceConfiguration {
             LettuceConnectionFactory connectionFactory = KsetRedisConnectionFactoryBuilder.build(source);
             RedisTemplate<String, Object> template =
                     KsetRedisTemplateFactory.create(connectionFactory, source.getKeyPrefix());
-            KsetRedisService service = KsetRedisService.from(name, template, ttlPolicy, streamSettings);
+            KsetRedisService service = KsetRedisServiceAutoConfiguration.monitorEnabled(environment)
+                    ? KsetRedisService.monitoredFrom(name, template, ttlPolicy, streamSettings)
+                    : KsetRedisService.from(name, template, ttlPolicy, streamSettings);
             services.put(name, service);
             beanFactory.registerSingleton(namedServiceBeanName(name), service);
         }

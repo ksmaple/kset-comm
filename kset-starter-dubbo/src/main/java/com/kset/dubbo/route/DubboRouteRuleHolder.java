@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Dubbo 路由规则内存持有
- */
+
 public final class DubboRouteRuleHolder {
 
     private static final CopyOnWriteArrayList<RouteCondition> CONDITIONS = new CopyOnWriteArrayList<>();

@@ -25,7 +25,7 @@ public class MonitorAutoConfiguration {
     @Bean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnClass(name = "org.springframework.web.servlet.HandlerInterceptor")
-    @ConditionalOnProperty(prefix = "kset.monitor.servlet", name = "trace-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "kset.monitor.web", name = "enabled", havingValue = "true", matchIfMissing = true)
     public MvcMonitorInterceptor mvcMonitorInterceptor() {
         return new MvcMonitorInterceptor();
     }
@@ -33,7 +33,7 @@ public class MonitorAutoConfiguration {
     @Bean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnClass(name = "org.springframework.web.servlet.HandlerInterceptor")
-    @ConditionalOnProperty(prefix = "kset.monitor.servlet", name = "trace-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "kset.monitor.web", name = "enabled", havingValue = "true", matchIfMissing = true)
     public WebMvcConfigurer mvcMonitorConfigurer(MvcMonitorInterceptor mvcMonitorInterceptor) {
         return new WebMvcConfigurer() {
             @Override

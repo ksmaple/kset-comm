@@ -48,14 +48,12 @@ public class KsetWebProperties {
         }
     }
 
-    /**
-     * OpenAPI 文档可选覆盖项；开关请用标准 {@code knife4j.enable}，扫描路径请用 {@code springdoc.group-configs}.
-     */
+    
     public static class Knife4j {
         private String title;
         private String description = "KSet API";
         private String version = "1.0.0";
-        /** 未配置 springdoc.group-configs 时的默认扫描路径 */
+        
         private String pathPattern = "/api/**";
 
         public String getTitle() {

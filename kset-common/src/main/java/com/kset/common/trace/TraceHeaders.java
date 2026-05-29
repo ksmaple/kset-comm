@@ -1,8 +1,6 @@
 package com.kset.common.trace;
 
-/**
- * 链路追踪与灰度相关 HTTP 头 / MDC 键名（kset-common 与 kset-cloud 共享）。
- */
+
 public final class TraceHeaders {
 
     public static final String TRACE_ID_KEY = "traceId";

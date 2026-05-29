@@ -1,7 +1,7 @@
 package com.kset.redis.lock;
 
 /**
- * ???????Redisson {@link org.redisson.api.RedissonMultiLock}??
+ * Lock handle intended for scoped use.
  */
 public interface KsetRedisLockScope extends KsetRedisLock {
 }

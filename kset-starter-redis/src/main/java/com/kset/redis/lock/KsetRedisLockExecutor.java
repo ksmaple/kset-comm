@@ -2,6 +2,7 @@ package com.kset.redis.lock;
 
 import com.kset.redis.core.KsetRedisTtlPolicy;
 import com.kset.redis.lock.internal.KsetRedissonLockProvider;
+import com.kset.redis.monitor.KsetRedisMonitor;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -11,16 +12,24 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * ?? Redisson ?????????
+ * Redisson based Redis lock executor.
  */
 public class KsetRedisLockExecutor {
 
     private final KsetRedissonLockProvider provider;
     private final KsetRedisTtlPolicy ttlPolicy;
+    private final boolean monitorEnabled;
 
     public KsetRedisLockExecutor(KsetRedissonLockProvider provider, KsetRedisTtlPolicy ttlPolicy) {
+        this(provider, ttlPolicy, false);
+    }
+
+    public KsetRedisLockExecutor(KsetRedissonLockProvider provider,
+                                 KsetRedisTtlPolicy ttlPolicy,
+                                 boolean monitorEnabled) {
         this.provider = Objects.requireNonNull(provider, "provider");
         this.ttlPolicy = Objects.requireNonNull(ttlPolicy, "ttlPolicy");
+        this.monitorEnabled = monitorEnabled;
     }
 
     public Optional<KsetRedisLock> tryAcquire(String lockKey, KsetRedisLockOptions options) {
@@ -106,6 +115,14 @@ public class KsetRedisLockExecutor {
     }
 
     public void run(String lockKey, KsetRedisLockOptions options, Runnable action) {
+        if (monitorEnabled) {
+            KsetRedisMonitor.run("redis-lock", "run", () -> doRun(lockKey, options, action));
+            return;
+        }
+        doRun(lockKey, options, action);
+    }
+
+    private void doRun(String lockKey, KsetRedisLockOptions options, Runnable action) {
         KsetRedisLock lock = acquire(lockKey, options);
         try {
             action.run();
@@ -115,6 +132,19 @@ public class KsetRedisLockExecutor {
     }
 
     public <T> T call(String lockKey, KsetRedisLockOptions options, Supplier<T> action) {
+        if (monitorEnabled) {
+            try {
+                return KsetRedisMonitor.call("redis-lock", "call", () -> doCall(lockKey, options, action));
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return doCall(lockKey, options, action);
+    }
+
+    private <T> T doCall(String lockKey, KsetRedisLockOptions options, Supplier<T> action) {
         KsetRedisLock lock = acquire(lockKey, options);
         try {
             return action.get();
@@ -124,6 +154,14 @@ public class KsetRedisLockExecutor {
     }
 
     public void runAll(Collection<String> lockKeys, KsetRedisLockOptions options, Runnable action) {
+        if (monitorEnabled) {
+            KsetRedisMonitor.run("redis-lock", "runAll", () -> doRunAll(lockKeys, options, action));
+            return;
+        }
+        doRunAll(lockKeys, options, action);
+    }
+
+    private void doRunAll(Collection<String> lockKeys, KsetRedisLockOptions options, Runnable action) {
         KsetRedisLock lock = acquireAll(lockKeys, options);
         try {
             action.run();
@@ -133,6 +171,19 @@ public class KsetRedisLockExecutor {
     }
 
     public <T> T callAll(Collection<String> lockKeys, KsetRedisLockOptions options, Supplier<T> action) {
+        if (monitorEnabled) {
+            try {
+                return KsetRedisMonitor.call("redis-lock", "callAll", () -> doCallAll(lockKeys, options, action));
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return doCallAll(lockKeys, options, action);
+    }
+
+    private <T> T doCallAll(Collection<String> lockKeys, KsetRedisLockOptions options, Supplier<T> action) {
         KsetRedisLock lock = acquireAll(lockKeys, options);
         try {
             return action.get();
@@ -142,6 +193,19 @@ public class KsetRedisLockExecutor {
     }
 
     public <T> Optional<T> execute(String lockKey, KsetRedisLockOptions options, Supplier<T> action) {
+        if (monitorEnabled) {
+            try {
+                return KsetRedisMonitor.call("redis-lock", "execute", () -> doExecute(lockKey, options, action));
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return doExecute(lockKey, options, action);
+    }
+
+    private <T> Optional<T> doExecute(String lockKey, KsetRedisLockOptions options, Supplier<T> action) {
         return resolveAcquire(List.of(lockKey), options, true).flatMap(lock -> {
             try {
                 return Optional.ofNullable(action.get());

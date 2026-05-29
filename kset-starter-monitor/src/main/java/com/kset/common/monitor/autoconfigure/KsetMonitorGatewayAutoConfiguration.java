@@ -16,7 +16,7 @@ public class KsetMonitorGatewayAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "traceIdGatewayFilter")
-    @ConditionalOnProperty(prefix = "kset.monitor.gateway", name = "trace-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "kset.monitor.gateway", name = {"enabled", "trace-enabled"}, havingValue = "true", matchIfMissing = true)
     public GlobalFilter traceIdGatewayFilter(KsetCloudProperties properties) {
         return new TraceIdGatewayFilter(properties);
     }

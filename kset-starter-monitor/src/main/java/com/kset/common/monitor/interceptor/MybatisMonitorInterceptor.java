@@ -29,15 +29,25 @@ public class MybatisMonitorInterceptor implements Interceptor {
         MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
         String name = ms.getId();
         InvocationContext ctx = new InvocationContext("Mybatis", MonitorTypes.SQL, name);
+        ctx.setAttribute("component", "mybatis");
+        ctx.setAttribute("sqlId", name);
         MonitorInterceptorRegistry.notifyBefore(ctx);
-        try (MonitorTransaction tx = Monitor.newTransaction(MonitorTypes.SQL, name)) {
+        MonitorTransaction tx = Monitor.newTransaction(MonitorTypes.SQL, name);
+        try {
+            tx.addData("component", "mybatis");
+            tx.addData("sqlId", name);
             Object result = invocation.proceed();
             tx.setStatus(MonitorStatus.SUCCESS);
             MonitorInterceptorRegistry.notifyAfter(ctx, null);
             return result;
         } catch (Throwable e) {
+            tx.setStatus(e);
+            tx.addData("errorType", e.getClass().getSimpleName());
+            Monitor.logError(e, name);
             MonitorInterceptorRegistry.notifyAfter(ctx, e);
             throw e;
+        } finally {
+            tx.close();
         }
     }
 
