@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class MonitorBackendConfiguration {
@@ -25,14 +26,14 @@ public class MonitorBackendConfiguration {
     @ConditionalOnClass(Cat.class)
     @ConditionalOnProperty(prefix = "kset.monitor", name = "backend", havingValue = "cat")
     @ConditionalOnMissingBean
-    public MonitorBackend catMonitorBackend(KsetMonitorProperties properties) {
+    public MonitorBackend catMonitorBackend(KsetMonitorProperties properties, Environment environment) {
         KsetMonitorProperties.Cat catProperties = properties.getCat();
         if (catProperties.isInitialize()) {
-            String domain = catProperties.getDomain();
+            String domain = resolveCatDomain(environment, catProperties);
             if (domain != null && !domain.isBlank()) {
-                Cat.initializeByDomain(domain.trim());
+                Cat.getBootstrap().initializeByDomain(domain);
             } else {
-                Cat.initialize();
+                Cat.getBootstrap().initialize();
             }
         }
         log.info("kset.monitor.backend=cat, using CAT monitor backend");
@@ -57,5 +58,17 @@ public class MonitorBackendConfiguration {
             return "log";
         }
         return backend.trim().toLowerCase();
+    }
+
+    private static String resolveCatDomain(Environment environment, KsetMonitorProperties.Cat catProperties) {
+        String applicationName = environment.getProperty("spring.application.name");
+        if (applicationName != null && !applicationName.isBlank()) {
+            return applicationName.trim();
+        }
+        String configuredDomain = catProperties.getDomain();
+        if (configuredDomain != null && !configuredDomain.isBlank()) {
+            return configuredDomain.trim();
+        }
+        return null;
     }
 }

@@ -64,7 +64,7 @@
         <protobuf-java.version>3.25.8</protobuf-java.version>
         <aliyun-oss.version>3.17.4</aliyun-oss.version>
         <logstash-encoder.version>8.0</logstash-encoder.version>
-        <cat-client.version>3.0.0</cat-client.version>
+        <cat-client.version>4.0-RC1</cat-client.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
 
         <!-- JSON / utilities / HTTP (common third-party) -->

@@ -4,6 +4,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 单次缓存操作的完整规格，包含 key、层级、TTL 与空值策略。
+ */
 public final class KsetCacheSpec {
 
     private final String cacheName;
@@ -14,6 +17,9 @@ public final class KsetCacheSpec {
     private final boolean cacheNull;
     private final Class<?> valueType;
 
+    /**
+     * 使用缓存名称与业务 key 创建规格构建器。
+     */
     public static Builder builder(String cacheName, String key) {
         return new Builder(cacheName, key);
     }
@@ -69,6 +75,9 @@ public final class KsetCacheSpec {
         return cacheName + "::" + key;
     }
 
+    /**
+     * 按实际写入值选择 TTL，null 值优先使用 nullTtl。
+     */
     public Duration ttlFor(Object value) {
         if (value == null) {
             return nullTtl != null ? nullTtl : ttl;

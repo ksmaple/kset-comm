@@ -19,9 +19,11 @@
     <description>KSet Monitor Starter - full-link traceId/gray propagation and thread-pool MDC</description>
 
     <dependencies>
+        <!-- Source: https://mvnrepository.com/artifact/com.dianping.cat/cat-client -->
         <dependency>
             <groupId>com.dianping.cat</groupId>
             <artifactId>cat-client</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.kset</groupId>

@@ -9,8 +9,6 @@ import com.kset.common.monitor.facade.MonitorEvent;
 import com.kset.common.monitor.facade.MonitorMetric;
 import com.kset.common.monitor.facade.MonitorStatus;
 
-import java.util.Map;
-
 /**
  * CAT 后端实现；仅在显式配置 {@code kset.monitor.backend=cat} 时由 starter 装配。
  */
@@ -18,7 +16,7 @@ public final class CatBackend implements MonitorBackend {
 
     @Override
     public boolean isEnabled() {
-        return Cat.isEnabled();
+        return true;
     }
 
     @Override
@@ -42,9 +40,9 @@ public final class CatBackend implements MonitorBackend {
     @Override
     public void logMetric(MonitorMetric metric) {
         if (metric.kind() == MetricKind.DURATION) {
-            Cat.logMetricForDuration(metric.name(), metric.value(), traceTags(metric));
+            Cat.logMetricForDuration(metricName(metric), metric.value());
         } else {
-            Cat.logMetricForCount(metric.name(), Math.toIntExact(metric.value()), traceTags(metric));
+            Cat.logMetricForCount(metricName(metric), Math.toIntExact(metric.value()));
         }
     }
 
@@ -62,10 +60,11 @@ public final class CatBackend implements MonitorBackend {
         return status == MonitorStatus.FAIL ? "FAIL" : Message.SUCCESS;
     }
 
-    private static Map<String, String> traceTags(MonitorMetric metric) {
+    private static String metricName(MonitorMetric metric) {
         return metric.traceId()
-                .map(traceId -> Map.of("traceId", traceId))
-                .orElseGet(Map::of);
+                .filter(traceId -> !traceId.isBlank() && !"-".equals(traceId))
+                .map(traceId -> metric.name() + ".trace." + traceId)
+                .orElse(metric.name());
     }
 
     private static String messageWithTrace(String traceId, String message) {
