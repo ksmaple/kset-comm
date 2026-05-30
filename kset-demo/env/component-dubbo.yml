@@ -14,6 +14,19 @@
 #     register-mode: instance
 #   consumer:
 #     check: false
+#     timeout: 3000
+#     retries: 0
+#     loadbalance: roundrobin
+#   provider:
+#     timeout: 3000
+#     retries: 0
+#     filter: tracing
+#   metadata-report:
+#     address: nacos://${NACOS_ADDR:127.0.0.1:8848}
+#   config-center:
+#     address: nacos://${NACOS_ADDR:127.0.0.1:8848}
+#   scan:
+#     base-packages: com.kset.demo
 
 # 来源：KSet Cloud Dubbo 扩展。
 # 非必选项：默认启用 trace 透传与灰度路由。

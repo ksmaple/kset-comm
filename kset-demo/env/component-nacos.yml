@@ -10,6 +10,13 @@ spring:
         # 非必选项：KSet Nacos starter 默认补齐 dev / KSET_GROUP。
         # namespace: dev
         # group: KSET_GROUP
+        # username: nacos
+        # password: nacos
+        # register-enabled: true
+        # ephemeral: true
+        # heart-beat-interval: 5000
+        # heart-beat-timeout: 15000
+        # ip-delete-timeout: 30000
       config:
         # 含义：配置中心使用的本地 Nacos 地址。
         server-addr: ${NACOS_ADDR:127.0.0.1:8848}
@@ -17,6 +24,13 @@ spring:
         # namespace: dev
         # group: KSET_GROUP
         # file-extension: yaml
+        # username: nacos
+        # password: nacos
+        # refresh-enabled: true
+        # timeout: 3000
+        # max-retry: 3
+        # config-retry-time: 2000
+        # enable-remote-sync-config: false
 
 # 来源：Spring Boot ConfigData。
 # 非必选项：KSet Nacos starter 会追加公共配置；业务同名配置需要时再打开。

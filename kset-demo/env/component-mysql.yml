@@ -11,6 +11,16 @@ spring:
     password: root
     # 非必选项：Spring Boot 通常可从 JDBC URL 推断驱动。
     # driver-class-name: com.mysql.cj.jdbc.Driver
+    # 非必选项：HikariCP 连接池常用参数。
+    # hikari:
+    #   pool-name: kset-demo-hikari
+    #   minimum-idle: 5
+    #   maximum-pool-size: 20
+    #   idle-timeout: 600000
+    #   max-lifetime: 1800000
+    #   connection-timeout: 30000
+    #   validation-timeout: 5000
+    #   connection-test-query: SELECT 1
 
 # 来源：Flyway / Spring Boot FlywayProperties。
 # 非必选项：需要数据库迁移时再打开。
@@ -18,6 +28,23 @@ spring:
 #   flyway:
 #     enabled: true
 #     baseline-on-migrate: true
+#     locations: classpath:db/migration
+#     table: flyway_schema_history
+#     out-of-order: false
+
+# 来源：MyBatis-Plus / MyBatis 原生配置。
+# 非必选项：需要覆盖 mapper、枚举、驼峰映射等行为时再打开。
+# mybatis-plus:
+#   mapper-locations: classpath*:/mapper/**/*.xml
+#   type-aliases-package: com.kset.demo
+#   configuration:
+#     map-underscore-to-camel-case: true
+#     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+#   global-config:
+#     db-config:
+#       logic-delete-field: deleted
+#       logic-delete-value: 1
+#       logic-not-delete-value: 0
 
 # 来源：KSet MySQL Starter。
 # 非必选项：默认已启用；仅需改变默认行为时再打开。

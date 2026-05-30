@@ -19,3 +19,11 @@
 #     l2:
 #       required: true
 #       default-ttl: 30m
+
+# 来源：Caffeine 开源缓存配置。
+# 非必选项：若业务直接使用 Spring Cache + Caffeine，可按 Spring Boot 原生配置打开。
+# spring:
+#   cache:
+#     type: caffeine
+#     caffeine:
+#       spec: maximumSize=10000,expireAfterWrite=5m

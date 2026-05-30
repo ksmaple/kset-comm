@@ -1,29 +1,11 @@
 spring:
   application:
     name: demo-standalone-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/kset_demo?useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
-  data:
-    redis:
-      host: localhost
-      port: 6379
+  config:
+    import:
+      - optional:file:./kset-demo/env/component-mysql.yml
+      - optional:file:./kset-demo/env/component-redis.yml
+      - optional:file:./kset-demo/env/component-knife4j.yml
 
 server:
   port: 8080
-
-kset:
-  mysql:
-    enabled: true
-    auto-fill: true
-  redis:
-    key-prefix: "demo-standalone:"
-    default-ttl: 30m
-    redisson:
-      enabled: false
-
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn

@@ -20,4 +20,33 @@
 # spring:
 #   cloud:
 #     gateway:
-#       routes: []
+#       discovery:
+#         locator:
+#           enabled: true
+#           lower-case-service-id: true
+#       httpclient:
+#         connect-timeout: 3000
+#         response-timeout: 5s
+#       default-filters:
+#         - StripPrefix=1
+#       routes:
+#         - id: demo-user-service
+#           uri: lb://demo-user-service
+#           predicates:
+#             - Path=/user/**
+#           filters:
+#             - StripPrefix=1
+#       globalcors:
+#         cors-configurations:
+#           '[/**]':
+#             allowed-origin-patterns:
+#               - "*"
+#             allowed-methods:
+#               - GET
+#               - POST
+#               - PUT
+#               - DELETE
+#               - OPTIONS
+#             allowed-headers:
+#               - "*"
+#             allow-credentials: true

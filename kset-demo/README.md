@@ -2,6 +2,8 @@
 
 两个独立示例，对应不同接入方式：
 
+示例配置采用轻量组合方式：各模块 `application.yaml` 只保留应用名、端口和 `spring.config.import`，具体组件配置在 [env](env) 目录按 `component-*.yml` 拆分。
+
 ## 1. 单机项目 — `demo-standalone-service`
 
 | 项 | 说明 |

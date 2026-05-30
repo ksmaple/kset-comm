@@ -7,5 +7,26 @@ rocketmq:
   producer:
     # 含义：默认生产者组名。
     group: ${spring.application.name}-producer
+    # 非必选项：发送消息超时时间，单位毫秒。
+    # send-message-timeout: 3000
+    # 非必选项：同步发送失败重试次数。
+    # retry-times-when-send-failed: 2
+    # 非必选项：异步发送失败重试次数。
+    # retry-times-when-send-async-failed: 2
+    # 非必选项：消息体最大字节数。
+    # max-message-size: 4194304
+    # 非必选项：启用 TLS。
+    # tls-enable: false
+  # 非必选项：消费者默认配置，实际 group/topic 通常在 @RocketMQMessageListener 上声明。
+  # consumer:
+  #   group: ${spring.application.name}-consumer
+  #   pull-batch-size: 32
+  #   pull-thread-nums: 20
+  #   consume-thread-min: 20
+  #   consume-thread-max: 64
+  # 非必选项：ACL 访问密钥。
+  # access-key:
+  # secret-key:
+  # namespace:
 
 # 非必选项：消费者组、ACL、发送超时等按 RocketMQ Spring Boot Starter 原生配置补充。

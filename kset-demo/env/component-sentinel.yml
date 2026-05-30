@@ -11,3 +11,17 @@
 #       degrade-rule-data-id: ${spring.application.name}-degrade-rules
 #       param-flow-rule-data-id: ${spring.application.name}-param-flow-rules
 #       gateway-flow-rule-data-id: ${spring.application.name}-gateway-flow-rules
+
+# 来源：Spring Cloud Alibaba Sentinel 原生配置。
+# 非必选项：需要接入 Sentinel Dashboard 或自定义传输端口时再打开。
+# spring:
+#   cloud:
+#     sentinel:
+#       enabled: true
+#       eager: true
+#       transport:
+#         dashboard: 127.0.0.1:8858
+#         port: 8719
+#         client-ip:
+#       filter:
+#         enabled: true
