@@ -1,0 +1,23 @@
+# Redis 组件配置
+
+# 来源：Spring Boot RedisProperties。
+spring:
+  data:
+    redis:
+      # 含义：本地 Redis 主机地址。
+      host: 127.0.0.1
+      # 含义：本地 Redis 端口。
+      port: 6379
+      # 含义：Redis 逻辑库编号。
+      database: 0
+      # 非必选项：Redis 命令超时时间。
+      # timeout: 2s
+
+# 来源：KSet Redis Starter。
+# 非必选项：默认启用，key-prefix 会按 spring.application.name 自动派生，default-ttl 默认 30m。
+# kset:
+#   redis:
+#     enabled: true
+#     key-prefix: "kset:${spring.application.name}:"
+#     default-ttl: 30m
+#     max-ttl: 7d

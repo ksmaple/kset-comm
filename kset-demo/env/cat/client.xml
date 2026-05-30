@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  KSet Demo CAT 客户端配置。
+  来源：CAT 开源客户端 client.xml。
+  含义：声明 CAT Server 连接地址；本地启动 CAT Server 时使用 127.0.0.1。
+  生产环境请替换为真实 CAT Server 地址。
+-->
+<config mode="client">
+    <servers>
+        <!-- 来源：CAT 开源客户端；ip/port/http-port 分别表示 CAT TCP 上报地址、TCP 端口和 HTTP 端口。 -->
+        <server ip="127.0.0.1" port="2280" http-port="8080"/>
+    </servers>
+</config>

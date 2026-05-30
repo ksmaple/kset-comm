@@ -1,0 +1,14 @@
+# Web 组件配置
+
+# 来源：KSet Web Starter。
+# 说明：引入 kset-starter-web 后，全局异常、ApiResponse、traceId 响应等默认自动装配。
+# 非必选项：需要覆盖 Web 行为时再打开。
+# kset:
+#   web:
+#     oplog:
+#       enabled: true
+#       user-id-header: X-User-Id
+#     request-logging:
+#       enabled: false
+#     response:
+#       trace-id-enabled: true

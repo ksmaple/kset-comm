@@ -1,0 +1,25 @@
+# Nacos 组件配置
+
+# 来源：Spring Cloud Alibaba Nacos Discovery / Config。
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 含义：服务注册发现使用的本地 Nacos 地址。
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+        # 非必选项：KSet Nacos starter 默认补齐 dev / KSET_GROUP。
+        # namespace: dev
+        # group: KSET_GROUP
+      config:
+        # 含义：配置中心使用的本地 Nacos 地址。
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+        # 非必选项：KSet Nacos starter 默认补齐 dev / KSET_GROUP。
+        # namespace: dev
+        # group: KSET_GROUP
+        # file-extension: yaml
+
+# 来源：Spring Boot ConfigData。
+# 非必选项：KSet Nacos starter 会追加公共配置；业务同名配置需要时再打开。
+# spring:
+#   config:
+#     import: optional:nacos:${spring.application.name}.yaml

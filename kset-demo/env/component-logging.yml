@@ -1,0 +1,21 @@
+# Logging 组件配置
+
+# 来源：Spring Boot LoggingSystem。
+# 非必选项：需要覆盖日志级别或日志目录时再打开。
+# logging:
+#   level:
+#     root: INFO
+#     com.kset: DEBUG
+#   file:
+#     path: tmp/logs
+#   logback:
+#     rollingpolicy:
+#       max-file-size: 100MB
+#       max-history: 7
+
+# 来源：KSet Logging。
+# 非必选项：默认会自动注入 kset-logback-spring.xml。
+# kset:
+#   logging:
+#     auto-config: true
+#     default-profile: local

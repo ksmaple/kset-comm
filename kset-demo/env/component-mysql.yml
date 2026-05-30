@@ -1,0 +1,27 @@
+# MySQL 组件配置
+
+# 来源：Spring Boot DataSourceProperties / HikariCP。
+spring:
+  datasource:
+    # 含义：本地 MySQL 连接地址。
+    url: jdbc:mysql://localhost:3306/kset_demo?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    # 含义：本地 MySQL 用户名。
+    username: root
+    # 含义：本地 MySQL 密码；仅用于 demo。
+    password: root
+    # 非必选项：Spring Boot 通常可从 JDBC URL 推断驱动。
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 来源：Flyway / Spring Boot FlywayProperties。
+# 非必选项：需要数据库迁移时再打开。
+# spring:
+#   flyway:
+#     enabled: true
+#     baseline-on-migrate: true
+
+# 来源：KSet MySQL Starter。
+# 非必选项：默认已启用；仅需改变默认行为时再打开。
+# kset:
+#   mysql:
+#     enabled: true
+#     auto-fill: true

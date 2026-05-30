@@ -1,0 +1,11 @@
+# RocketMQ 组件配置
+
+# 来源：RocketMQ Spring Boot Starter 原生配置。
+rocketmq:
+  # 含义：本地 RocketMQ NameServer 地址。
+  name-server: ${ROCKETMQ_ADDR:127.0.0.1:9876}
+  producer:
+    # 含义：默认生产者组名。
+    group: ${spring.application.name}-producer
+
+# 非必选项：消费者组、ACL、发送超时等按 RocketMQ Spring Boot Starter 原生配置补充。

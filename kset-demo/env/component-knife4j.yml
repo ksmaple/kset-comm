@@ -1,0 +1,24 @@
+# Knife4j / OpenAPI 组件配置
+
+# 来源：Knife4j 开源配置。
+knife4j:
+  # 含义：启用 Knife4j 文档页面；入口通常为 /doc.html。
+  enable: true
+
+# 来源：springdoc-openapi 开源配置。
+# 非必选项：需要显式控制 OpenAPI/Swagger UI 时再打开。
+# springdoc:
+#   api-docs:
+#     enabled: true
+#   swagger-ui:
+#     enabled: true
+
+# 来源：KSet Web Starter 对 Knife4j 元数据的可选覆盖。
+# 非必选项：默认会按应用信息生成基础文档。
+# kset:
+#   web:
+#     knife4j:
+#       title: ${spring.application.name}
+#       description: KSet API
+#       version: 1.0.0
+#       path-pattern: /api/**

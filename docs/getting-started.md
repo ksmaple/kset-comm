@@ -2,6 +2,8 @@
 
 kset-framework 提供两类典型接入方式，对应 **两个示例工程**：
 
+配置模板见 [kset-demo/env](../kset-demo/env)：`application-global.yml` 覆盖全局配置，`component-*.yml` 按组件独立叠加；非必选项均以注释保留。
+
 | 场景 | 示例模块 | 依赖中间件 | 说明 |
 |------|----------|------------|------|
 | **单机项目** | [demo-standalone-service](../kset-demo/demo-standalone-service) | MySQL、Redis | Web + DB + 缓存，无注册中心 |
