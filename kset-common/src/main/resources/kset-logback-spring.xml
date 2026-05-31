@@ -15,7 +15,7 @@
     <!-- dev：可读文本，仅控制台 -->
     <appender name="KSET_TEXT_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId:-}/%X{spanId:-}] [%X{grayTag:-}] [%X{operator:-}] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %level [%X{traceId:-}/%X{spanId:-}] %logger{32} - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>

@@ -31,6 +31,15 @@ class KsetLogbackConfigurationTest {
         assertThat(infoAppender).contains("<onMismatch>DENY</onMismatch>");
     }
 
+    @Test
+    void textConsolePatternUsesCompactLayout() throws IOException {
+        String xml = readResource("kset-logback-spring.xml");
+
+        assertThat(xml).contains("%d{HH:mm:ss.SSS} %level [%X{traceId:-}/%X{spanId:-}] %logger{32} - %msg%n");
+        assertThat(xml).doesNotContain("%-5level");
+        assertThat(xml).doesNotContain("[%X{grayTag:-}] [%X{operator:-}]");
+    }
+
     private static String readResource(String name) throws IOException {
         try (InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
             assertThat(input).isNotNull();
