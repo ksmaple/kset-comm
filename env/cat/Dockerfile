@@ -2,8 +2,7 @@ FROM tomcat:8.5.41-jre8-alpine
 
 ENV TZ=Asia/Shanghai
 
-COPY cat-home.war /usr/local/tomcat/webapps/cat.war
-COPY datasources.xml /data/appdatas/cat/datasources.xml
+COPY server/cat-home.war /usr/local/tomcat/webapps/cat.war
 COPY datasources.sh /usr/local/tomcat/datasources.sh
 
 WORKDIR /usr/local/tomcat

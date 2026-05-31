@@ -1,31 +1,59 @@
-# CAT 本地 Docker 部署
+# CAT 环境配置
 
-CAT 已纳入 `env/up` 一键启动。本目录保留 CAT 镜像构建与 MySQL 初始化脚本。
+本目录保存 CAT 部署必需文件。运行数据不写入仓库，统一挂载到宿主机 `/data`。
 
-## 相关配置
+## 文件说明
 
-| 项 | 位置 |
-|----|------|
-| 客户端连接地址 | `env/config/cat/client.xml`（启动时自动同步） |
-| 端口等环境变量 | `env/config/.env` |
-| MySQL 建表脚本 | `mysql/init/01-CatApplication.sql` |
+| 文件 | 说明 |
+|------|------|
+| `docker-compose.yml` | CAT Server 和内置 MySQL 服务定义 |
+| `Dockerfile` | 基于 Tomcat 构建 CAT Server 镜像 |
+| `datasources.sh` | 容器启动时按环境变量生成 `datasources.xml`、`server.xml` |
+| `client/client.xml` | CAT 客户端连接配置源 |
+| `server/cat-home.war` | CAT Server 应用包 |
+| `server/init_cat.sql` | 内置 MySQL 首次启动初始化脚本 |
 
-## 单独操作 CAT
+## 启动
+
+推荐在仓库根目录执行：
 
 ```powershell
-docker compose --env-file ../.env -f docker-compose.yml up -d --build
-docker compose --env-file ../.env -f docker-compose.yml ps
-docker compose --env-file ../.env -f docker-compose.yml logs -f cat
+.\env\script\up.ps1 -Build
 ```
 
-## 默认地址
+Linux/macOS/Git Bash：
 
-| 组件 | 地址 |
-|------|------|
-| CAT 控制台 | http://127.0.0.1:8088/cat |
-| CAT 上报 | `127.0.0.1:2280` |
-| MySQL | `127.0.0.1:3307`，库名 `cat` |
+```bash
+./env/script/up.sh --build
+```
 
-## 使用外部 MySQL
+查看 CAT 日志：
 
-注释 `docker-compose.yml` 中的 `mysql` 服务，并修改 `cat` 环境变量 `MYSQL_URL`、`MYSQL_PASSWD` 等。需先执行 `mysql/init/01-CatApplication.sql` 建表。
+```powershell
+cd env
+docker compose --env-file .env -f docker-compose.yml -f cat/docker-compose.yml logs -f cat
+```
+
+## 关键环境变量
+
+| 变量 | 默认值 | 含义 |
+|------|--------|------|
+| `CAT_SERVER_IP` | `127.0.0.1` | 客户端访问 CAT Server 的宿主机地址 |
+| `CAT_HTTP_PORT` | `8088` | CAT 控制台宿主机端口 |
+| `CAT_TCP_PORT` | `2280` | CAT 客户端上报 TCP 端口 |
+| `CAT_JOB_MACHINE` | `true` | 是否启用 CAT 任务节点 |
+| `CAT_ALERT_MACHINE` | `true` | 是否启用 CAT 告警节点 |
+| `CAT_MYSQL_PORT` | `3307` | 内置 MySQL 宿主机端口 |
+| `CAT_MYSQL_DATABASE` | `cat` | CAT 数据库名 |
+| `CAT_MYSQL_USER` | `root` | CAT 数据库用户 |
+| `CAT_MYSQL_PASSWORD` | 空 | CAT 数据库密码 |
+
+## 数据目录
+
+| 内容 | 宿主机目录 |
+|------|------------|
+| CAT Server 运行数据 | `/data/appdatas/cat/` |
+| CAT 客户端连接配置 | `/data/appdatas/cat/client.xml` |
+| CAT 内置 MySQL 数据 | `/data/cat/mysql/` |
+
+CAT 启动后，`/data/appdatas/cat/` 下应包含 `client.xml`、`datasources.xml`、`server.xml` 等服务端配置文件。

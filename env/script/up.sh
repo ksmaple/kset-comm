@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 一键启动本地中间件（Nacos / Redis / PostgreSQL / CAT）
+# 启动本地公共环境。
 set -euo pipefail
 
 BUILD=false
@@ -11,21 +11,23 @@ for arg in "$@"; do
     --no-cat) NO_CAT=true ;;
     *)
       echo "未知参数: ${arg}"
-      echo "用法: env/up.sh [--build] [--no-cat]"
+      echo "用法: env/script/up.sh [--build] [--no-cat]"
       exit 1
       ;;
   esac
 done
 
-ENV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "${ENV_DIR}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-bash "${ENV_DIR}/sync-config.sh"
+bash "${SCRIPT_DIR}/sync.sh"
 
 if [[ ! -f "${ENV_DIR}/.env" ]]; then
-  echo "缺少 env/.env，请先执行: cp env/config/.env.example env/config/.env" >&2
+  echo "缺少 env/.env，请先执行: cp env/.env.example env/.env" >&2
   exit 1
 fi
+
+cd "${ENV_DIR}"
 
 COMPOSE=(docker compose --env-file .env -f docker-compose.yml)
 if [[ "${NO_CAT}" != "true" ]]; then

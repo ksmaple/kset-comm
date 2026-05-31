@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 停止本地中间件
+# 停止本地公共环境。
 set -euo pipefail
 
 NO_CAT=false
@@ -11,13 +11,15 @@ for arg in "$@"; do
     --volumes) VOLUMES=true ;;
     *)
       echo "未知参数: ${arg}"
-      echo "用法: env/down.sh [--no-cat] [--volumes]"
+      echo "用法: env/script/down.sh [--no-cat] [--volumes]"
       exit 1
       ;;
   esac
 done
 
-ENV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 cd "${ENV_DIR}"
 
 COMPOSE=(docker compose)

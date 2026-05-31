@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>3.5.14</version>
         <relativePath/>
     </parent>
 
@@ -34,8 +34,8 @@
         <kset-starter.version>1.0.0-SNAPSHOT</kset-starter.version>
 
         <!-- Spring Cloud / Alibaba -->
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
-        <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
+        <spring-cloud.version>2025.0.2</spring-cloud.version>
+        <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
         <dubbo.version>3.3.6</dubbo.version>
 
         <!-- Third-party libraries -->
@@ -255,7 +255,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <artifactId>rocketmq-v5-client-spring-boot-starter</artifactId>
                 <version>${rocketmq-spring.version}</version>
             </dependency>
 

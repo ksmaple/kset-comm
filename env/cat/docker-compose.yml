@@ -1,7 +1,7 @@
 services:
   cat:
     build:
-      context: .
+      context: ./cat
       dockerfile: Dockerfile
     image: kset-cat:local
     container_name: kset-cat
@@ -10,18 +10,17 @@ services:
       mysql:
         condition: service_healthy
     environment:
-      MYSQL_URL: mysql
-      MYSQL_PORT: "3306"
-      MYSQL_USERNAME: root
-      MYSQL_PASSWD: ""
-      MYSQL_SCHEMA: cat
-      CAT_SERVERS: 127.0.0.1:${CAT_TCP_PORT:-2280}:${CAT_HTTP_PORT:-8088}
-      CAT_JOB_MACHINE: "true"
-      CAT_ALERT_MACHINE: "true"
+      MYSQL_URL: "${CAT_MYSQL_HOST:-mysql}"
+      MYSQL_PORT: "${CAT_MYSQL_INTERNAL_PORT:-3306}"
+      MYSQL_USERNAME: "${CAT_MYSQL_USER:-root}"
+      MYSQL_PASSWD: "${CAT_MYSQL_PASSWORD:-}"
+      MYSQL_SCHEMA: "${CAT_MYSQL_DATABASE:-cat}"
+      CAT_SERVERS: "${CAT_SERVER_IP:-127.0.0.1}:${CAT_TCP_PORT:-2280}:${CAT_HTTP_PORT:-8088}"
+      CAT_JOB_MACHINE: "${CAT_JOB_MACHINE:-true}"
+      CAT_ALERT_MACHINE: "${CAT_ALERT_MACHINE:-true}"
       TZ: Asia/Shanghai
     volumes:
-      - ./appdatas:/data/appdatas/cat
-      - ../config/cat/client.xml:/data/appdatas/cat/client.xml:ro
+      - /data/appdatas/cat:/data/appdatas/cat
     ports:
       - "${CAT_HTTP_PORT:-8088}:8080"
       - "${CAT_TCP_PORT:-2280}:2280"
@@ -47,13 +46,13 @@ services:
       - --innodb-flush-log-at-trx-commit=0
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-      MYSQL_DATABASE: cat
+      MYSQL_DATABASE: "${CAT_MYSQL_DATABASE:-cat}"
       TZ: Asia/Shanghai
     ports:
       - "${CAT_MYSQL_PORT:-3307}:3306"
     volumes:
-      - ./mysql/volume:/var/lib/mysql
-      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+      - /data/cat/mysql:/var/lib/mysql
+      - ./cat/server/init_cat.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     networks:
       - kset-cat
     healthcheck:
@@ -65,4 +64,4 @@ services:
 
 networks:
   kset-cat:
-    name: kset-cat
+    name: kset-framework-cat

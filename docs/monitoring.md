@@ -97,6 +97,7 @@ public void createOrder(...) { }
 | Dubbo 透传 + RPC Transaction | monitor + Dubbo | `DubboTraceFilter` |
 | Gateway TraceId | monitor + Gateway | `TraceIdGatewayFilter` |
 | MyBatis SQL Transaction | monitor + MyBatis / MyBatis-Plus | `KsetMonitorMybatisAutoConfiguration` 注册 `MybatisMonitorInterceptor` |
+| MQ 事件发布/消费 Transaction | monitor + mq starter | `RocketMqEventFacade` / `RocketMqEventConsumer` 使用 `MonitorTypes.MQ`，消息属性透传 traceId/spanId/grayTag |
 | `@Monitored` AOP | monitor + AOP | `MonitorAspect` |
 | 日志 traceId | KSet Logback | `%X{traceId}`、`%X{spanId}`（MDC 由 Monitor 写入） |
 | 日志 operator / flow | KSet Logback | `%X{operator}`、`flow.*`（由 OpLogContext / FlowLogContext 写入） |

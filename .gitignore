@@ -31,7 +31,14 @@ Thumbs.db
 
 # Local deploy env
 env/.env
-env/config/.env
+env/cat/.env
 env/cat/mysql/volume/
 env/cat/appdatas/
 data/appdatas/
+data/cat/mysql/
+data/nacos/
+data/postgres/
+data/redis/
+data/rocketmq/
+data/*.db
+data/*.db-*

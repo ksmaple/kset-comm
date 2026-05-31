@@ -67,7 +67,7 @@ EOF
 
 write_client_xml() {
   if [ -f "${CAT_HOME}/client.xml" ]; then
-    echo "client.xml already exists, skip generation"
+    echo "client.xml already exists, use mounted config"
     return
   fi
 

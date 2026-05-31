@@ -26,7 +26,7 @@
 | `component-cache.yml` | KSet Cache 可选覆盖配置 |
 | `component-gateway.yml` | Gateway 可选覆盖配置 |
 | `component-sentinel.yml` | Sentinel 可选覆盖配置 |
-| `component-rocketmq.yml` | RocketMQ 配置 |
+| `component-rocketmq.yml` | RocketMQ 5 Client 配置，默认连接 Proxy gRPC `127.0.0.1:8081` |
 | `component-logging.yml` | 日志可选覆盖配置 |
 | `component-web.yml` | KSet Web 可选覆盖配置 |
 | `cat/client.xml` | CAT 客户端本地连接配置，默认连接 `127.0.0.1:2280` |
@@ -89,3 +89,5 @@ mvn -pl kset-demo/demo-standalone-service spring-boot:run -Dspring-boot.run.argu
 ```
 
 CAT 客户端配置文件路径按 CAT 客户端默认查找规则加载。若本机 CAT Server 不在 `127.0.0.1`，先修改 `cat/client.xml` 中的 `ip`、`port` 和 `http-port`。
+
+RocketMQ 5 客户端使用 Proxy gRPC 端点，不再使用旧客户端的 `rocketmq.name-server`。本地环境启动后默认连接 `ROCKETMQ_ENDPOINTS=127.0.0.1:8081`，配置见 `component-rocketmq.yml`。引入 `kset-starter-mq` 且配置 RocketMQ producer 后，`EventFacade` 会自动切换为 RocketMQ 实现；业务通过 `@KsetMqEvent` 注解或 `RocketMqEventOperations` 编程式 API 控制 topic/tag，不需要额外声明事件门面配置。
