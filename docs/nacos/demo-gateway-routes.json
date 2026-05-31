@@ -1,14 +1,14 @@
 [
   {
-    "id": "demo-user-service",
-    "uri": "lb://demo-user-service",
+    "id": "demo-micro-service-users",
+    "uri": "lb://demo-micro-service",
     "predicates": [
       { "name": "Path", "args": { "pattern": "/api/users/**" } }
     ]
   },
   {
-    "id": "demo-order-service",
-    "uri": "lb://demo-order-service",
+    "id": "demo-micro-service-orders",
+    "uri": "lb://demo-micro-service",
     "predicates": [
       { "name": "Path", "args": { "pattern": "/api/orders/**" } }
     ]

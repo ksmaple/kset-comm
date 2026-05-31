@@ -25,7 +25,7 @@ Maven 依赖示例：
 </dependency>
 ```
 
-如使用 MySQL 或 PostgreSQL，将驱动替换为 `com.mysql:mysql-connector-j` 或 `org.postgresql:postgresql`。需要 Flyway 数据库方言时再显式引入 `flyway-mysql` 或 `flyway-database-postgresql`。
+如使用 MySQL 或 PostgreSQL，将驱动替换为 `com.mysql:mysql-connector-j` 或 `org.postgresql:postgresql`。需要 Flyway 迁移时，业务模块自行引入 `flyway-core` 和对应数据库方言模块，例如 `flyway-mysql` 或 `flyway-database-postgresql`；版本由父 POM 统一管理。
 
 配置来源和含义：
 - `spring.datasource.url`：来源 Spring Boot `DataSourceProperties`，数据库连接地址。

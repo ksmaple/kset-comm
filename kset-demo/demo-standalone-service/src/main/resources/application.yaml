@@ -1,11 +1,26 @@
 spring:
   application:
     name: demo-standalone-service
-  config:
-    import:
-      - optional:file:./kset-demo/env/component-mysql.yml
-      - optional:file:./kset-demo/env/component-redis.yml
-      - optional:file:./kset-demo/env/component-knife4j.yml
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/kset_demo
+    username: postgres
+    password: postgres
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
 
 server:
-  port: 8080
+  port: 18081
+
+knife4j:
+  enable: true
+
+kset:
+  monitor:
+    backend: cat
+    cat:
+      initialize: true

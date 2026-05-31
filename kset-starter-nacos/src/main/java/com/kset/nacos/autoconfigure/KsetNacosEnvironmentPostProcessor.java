@@ -31,8 +31,7 @@ public class KsetNacosEnvironmentPostProcessor implements EnvironmentPostProcess
         putIfMissing(environment, defaults, "spring.cloud.nacos.config.group",
                 properties.getNacos().getGroup());
 
-        appendConfigImport(environment, defaults,
-                "optional:nacos:" + properties.getNacos().getCommonConfigDataId());
+        appendConfigImport(environment, properties.getNacos().getCommonConfigDataId());
 
         if (!defaults.isEmpty()) {
             environment.getPropertySources().addLast(new MapPropertySource(PROPERTY_SOURCE_NAME, defaults));
@@ -46,16 +45,25 @@ public class KsetNacosEnvironmentPostProcessor implements EnvironmentPostProcess
         }
     }
 
-    private void appendConfigImport(ConfigurableEnvironment environment, Map<String, Object> defaults,
-                                    String importEntry) {
-        String existing = environment.getProperty("spring.config.import");
-        if (existing == null || existing.isBlank()) {
-            defaults.put("spring.config.import", importEntry);
+    private void appendConfigImport(ConfigurableEnvironment environment, String commonConfigDataId) {
+        String importEntry = "optional:nacos:" + commonConfigDataId;
+        String merged = mergeConfigImport(environment.getProperty("spring.config.import"), importEntry);
+        if (merged == null) {
             return;
         }
-        if (!existing.contains(importEntry)) {
-            defaults.put("spring.config.import", existing + "," + importEntry);
+        environment.getPropertySources().addFirst(new MapPropertySource(
+                PROPERTY_SOURCE_NAME + "ConfigImport",
+                Map.of("spring.config.import", merged)));
+    }
+
+    private static String mergeConfigImport(String existing, String importEntry) {
+        if (existing == null || existing.isBlank()) {
+            return importEntry;
         }
+        if (existing.contains(importEntry)) {
+            return null;
+        }
+        return existing + "," + importEntry;
     }
 
     @Override

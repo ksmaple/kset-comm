@@ -2,6 +2,7 @@ package com.kset.redis.autoconfigure;
 
 import com.kset.redis.config.KsetRedisTemplateConfiguration;
 import com.kset.cloud.config.KsetRedisProperties;
+import com.kset.redis.config.KsetRedisSerializerConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnProperty(prefix = "kset.redis", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(KsetRedisProperties.class)
 @Import({
+        KsetRedisSerializerConfiguration.class,
         KsetRedisTemplateConfiguration.class,
         KsetCacheAutoConfiguration.class,
         KsetRedisServiceAutoConfiguration.class,

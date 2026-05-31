@@ -1,21 +1,23 @@
 package com.kset.redis.config;
 
 import com.kset.cloud.config.KsetRedisProperties;
+import com.kset.redis.codec.KsetFastjsonRedisSerializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 public class KsetRedisTemplateConfiguration {
 
-    @Bean(name = {"ksetRedisTemplate", "redisTemplate"})
-    @Primary
-    @ConditionalOnMissingBean(RedisTemplate.class)
+    @Bean(name = "ksetRedisTemplate")
+    @ConditionalOnMissingBean(name = "ksetRedisTemplate")
     public RedisTemplate<String, Object> ksetRedisTemplate(RedisConnectionFactory connectionFactory,
-                                                           KsetRedisProperties properties) {
-        return KsetRedisTemplateFactory.create(connectionFactory, properties.getKeyPrefix());
+                                                           KsetRedisProperties properties,
+                                                           @Qualifier(KsetRedisSerializerConfiguration.BEAN_NAME)
+                                                           KsetFastjsonRedisSerializer valueSerializer) {
+        return KsetRedisTemplateFactory.create(connectionFactory, properties.getKeyPrefix(), valueSerializer);
     }
 }

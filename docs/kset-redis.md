@@ -1,6 +1,6 @@
 # KSet Redis 统一抽象
 
-依赖 `kset-starter-redis` 后，可使用 **`KsetRedisService`（注入）** 与 **`KsetRedis`（静态）** 操作 Redis；可选 **Redisson** 提供分布式锁与统一 Jackson 编解码。
+依赖 `kset-starter-redis` 后，可使用 **`KsetRedisService`（注入）** 与 **`KsetRedis`（静态）** 操作 Redis；可选 **Redisson** 提供分布式锁与统一 Fastjson2 编解码。
 
 | 包 | 说明 |
 |----|------|
@@ -9,6 +9,44 @@
 | `com.kset.redis.rank` | 排行榜（ZSET 单榜 / 分组二级榜） |
 | `com.kset.redis.key` | Key 规范与生成（`:` 分隔） |
 | `com.kset.redis.autoconfigure` | Spring Boot 自动配置 |
+
+## 对象解析
+
+KSet Redis 统一使用名为 `ksetRedisValueSerializer` 的 Fastjson2 序列化器处理值对象，覆盖范围包括：
+
+- `ksetRedisTemplate` 的 value / hash value
+- `RedisCacheManager` 的缓存值
+- Redisson 的默认 `Codec`
+
+基础类型按 Redis 友好的文本存储，复杂对象按 Fastjson2 JSON 存储并携带类型信息。业务如需调整值序列化规则，只需要声明同名 Bean：
+
+```java
+@Bean("ksetRedisValueSerializer")
+KsetFastjsonRedisSerializer ksetRedisValueSerializer() {
+    return new KsetFastjsonRedisSerializer();
+}
+```
+
+Spring Boot 原生 `redisTemplate` 和 `stringRedisTemplate` 不会被 KSet 覆盖；需要 KSet 默认对象解析时注入 `KsetRedisService` 或 `@Qualifier("ksetRedisTemplate")`。
+
+## 监控
+
+引入 `kset-starter-monitor` 后，Redis 相关操作默认进入 `MonitorTypes.CACHE`：
+
+- `KsetRedisService` / `KsetRedis`：通过 KSet 门面监控所有 `KsetRedisOperations` 方法。
+- KSet Lock / Rank：分布式锁和排行榜对象也会创建 Redis 监控 Transaction。
+- 原生 `RedisTemplate`、`StringRedisTemplate`、`RedissonClient`：仅作为底层实现保留，不做监控代理、不改变原生行为。需要监控时统一通过 `KsetRedisService` / `KsetRedis`、KSet Lock 或 KSet Rank 使用。
+
+监控开关：
+
+```yaml
+kset:
+  monitor:
+    redis:
+      enabled: true
+```
+
+`ksetRedisTemplate`、Spring Boot 原生 `redisTemplate` / `stringRedisTemplate` 和 `RedissonClient` 都不会被透明包装，避免底层组件行为被框架监控改变。监控内部保留嵌套去重，KSet Lock / Rank 等组合调用只保留外层 Redis Transaction。
 
 ## Redis Key 规范（`:` 分隔）
 

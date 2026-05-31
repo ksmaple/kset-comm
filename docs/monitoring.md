@@ -21,7 +21,7 @@
 | `monitor-facade/reporter` | `com.kset.common.monitor.reporter.*` |
 | `monitor-spring-boot-starter` | `kset-starter-monitor` |
 | `monitor-plugin-dubbo` | `kset-starter-monitor` Dubbo Filter |
-| `monitor-plugin-redis` | `kset-starter-redis` `RedisMonitorPluginAutoConfiguration` |
+| `monitor-plugin-redis` | `kset-starter-redis` KSet Redis 门面、Lock、Rank |
 | `monitor-plugin-okhttp` | `kset-common` `OkHttpMonitorPlugin` |
 
 ## 统一门面
@@ -102,7 +102,7 @@ public void createOrder(...) { }
 | 日志 traceId | KSet Logback | `%X{traceId}`、`%X{spanId}`（MDC 由 Monitor 写入） |
 | 日志 operator / flow | KSet Logback | `%X{operator}`、`flow.*`（由 OpLogContext / FlowLogContext 写入） |
 | 线程池 MDC | monitor | `MdcThreadPoolTraceAdapter` |
-| Redis 插件 | monitor + redis starter | `RedisMonitorPluginAutoConfiguration` |
+| Redis 插件 | monitor + redis starter | 监控 `KsetRedisService` / `KsetRedis`、KSet Lock、KSet Rank；原生 `RedisTemplate` / `StringRedisTemplate` / `RedissonClient` 不做监控代理 |
 
 HTTP 慢请求由 URL Transaction + `LogBackend` 超阈值 WARN 统一处理。
 
@@ -128,9 +128,9 @@ kset:
       enabled: true
     aop:
       enabled: true
-    plugin:
-      redis:
-        enabled: true
+    redis:
+      # 来源：KSet Redis Monitor；含义：是否监控 KSet Redis 门面、KSet Lock、KSet Rank。
+      enabled: true
 ```
 
 ## 扩展自定义门面

@@ -1,7 +1,9 @@
 package com.kset.redis.autoconfigure;
 
 import com.kset.cloud.config.KsetRedisProperties;
+import com.kset.redis.codec.KsetFastjsonRedisSerializer;
 import com.kset.redis.config.KsetRedisConnectionFactoryBuilder;
+import com.kset.redis.config.KsetRedisSerializerConfiguration;
 import com.kset.redis.config.KsetRedisTemplateFactory;
 import com.kset.redis.core.KsetRedisRegistry;
 import com.kset.redis.core.KsetRedisService;
@@ -11,6 +13,7 @@ import com.kset.redis.support.KsetRedisNamedSources;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -38,7 +41,9 @@ public class KsetRedisMultiSourceConfiguration {
                                                        KsetRedisTtlPolicy ttlPolicy,
                                                        KsetRedisStreamSettings streamSettings,
                                                        ConfigurableListableBeanFactory beanFactory,
-                                                       Environment environment) {
+                                                       Environment environment,
+                                                       @Qualifier(KsetRedisSerializerConfiguration.BEAN_NAME)
+                                                       KsetFastjsonRedisSerializer valueSerializer) {
         Map<String, KsetRedisProperties.RedisSourceProperties> sources = properties.getSources();
         if (sources == null || sources.isEmpty()) {
             return KsetRedisNamedSources.empty();
@@ -58,7 +63,7 @@ public class KsetRedisMultiSourceConfiguration {
             }
             LettuceConnectionFactory connectionFactory = KsetRedisConnectionFactoryBuilder.build(source);
             RedisTemplate<String, Object> template =
-                    KsetRedisTemplateFactory.create(connectionFactory, source.getKeyPrefix());
+                    KsetRedisTemplateFactory.create(connectionFactory, source.getKeyPrefix(), valueSerializer);
             KsetRedisService service = KsetRedisServiceAutoConfiguration.monitorEnabled(environment)
                     ? KsetRedisService.monitoredFrom(name, template, ttlPolicy, streamSettings)
                     : KsetRedisService.from(name, template, ttlPolicy, streamSettings);

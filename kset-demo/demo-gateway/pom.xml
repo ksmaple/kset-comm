@@ -15,6 +15,10 @@
     <packaging>jar</packaging>
     <name>demo-gateway</name>
 
+    <properties>
+        <kset.skipModuleTests>false</kset.skipModuleTests>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.kset</groupId>

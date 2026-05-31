@@ -1,41 +1,36 @@
 # kset-demo 示例工程
 
-两个独立示例，对应不同接入方式：
-
-示例配置采用轻量组合方式：各模块 `application.yaml` 只保留应用名、端口和 `spring.config.import`，具体组件配置在 [env](env) 目录按 `component-*.yml` 拆分。
+两个独立示例，对应不同接入方式。各模块配置写在 **`src/main/resources/application.yaml`**；[env](env) 目录仅提供可复制的配置示例。
 
 ## 1. 单机项目 — `demo-standalone-service`
 
 | 项 | 说明 |
 |----|------|
-| 依赖 | web + datasource + SQLite driver + redis |
-| 端口 | 8080 |
-| 中间件 | SQLite（文件 `./data/kset_demo.db`）、Redis |
+| 依赖 | web + datasource + PostgreSQL + redis + monitor |
+| 端口 | 18081 |
+| 中间件 | PostgreSQL（`127.0.0.1:5432/kset_demo`）、Redis |
 | 启动 | `mvn -pl kset-demo/demo-standalone-service spring-boot:run` |
 
-- API：http://localhost:8080/api/users/1  
-- 文档：http://localhost:8080/doc.html  
+- API：http://localhost:18081/api/users/1
+- 文档：http://localhost:18081/doc.html
 
-详见 [docs/getting-started.md](../docs/getting-started.md#一单机项目)。
-
-## 2. 微服务 Cloud — `demo-user-service` / `demo-order-service` / `demo-gateway`
+## 2. 微服务 Cloud — `demo-micro-service` / `demo-gateway`
 
 | 模块 | 端口 | 说明 |
 |------|------|------|
-| `demo-api` | — | Dubbo 接口定义 |
-| `demo-user-service` | 8081 | 用户服务 + Dubbo Provider（nacos + sentinel） |
-| `demo-order-service` | 8082 | 订单服务，Dubbo 消费用户 + Redis（nacos + sentinel） |
-| `demo-gateway` | 见 application.yaml | 网关（仅 starter-gateway） |
+| `demo-micro-service` | 18082 | 用户与订单微服务示例，包含 Dubbo Provider/Consumer + Redis（Nacos + Sentinel） |
+| `demo-gateway` | 8080 | 网关（starter-gateway + monitor） |
 
-中间件：SQLite、Redis、Nacos（`NACOS_ADDR` 默认 `127.0.0.1:8848`）。
+中间件：PostgreSQL、Redis、Nacos（`NACOS_ADDR` 默认 `127.0.0.1:8848`）。
 
 ```bash
 mvn clean install
-mvn -pl kset-demo/demo-user-service spring-boot:run
-mvn -pl kset-demo/demo-order-service spring-boot:run
+mvn -pl kset-demo/demo-micro-service spring-boot:run
 mvn -pl kset-demo/demo-gateway spring-boot:run
 ```
 
 Gateway 路由样例：[docs/nacos/demo-gateway-routes.json](../docs/nacos/demo-gateway-routes.json)。
 
-详见 [docs/getting-started.md](../docs/getting-started.md#二微服务-cloud-项目)。
+切换数据库或叠加组件时，从 [env/README.md](env/README.md) 复制示例到对应 `application.yaml`。
+
+详见 [docs/getting-started.md](../docs/getting-started.md)。

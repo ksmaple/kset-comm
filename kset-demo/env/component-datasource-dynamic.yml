@@ -12,10 +12,14 @@ spring:
       strict: false
       datasource:
         master:
-          # 来源：dynamic-datasource DataSourceProperty.url；含义：主数据源连接地址，默认使用本地 SQLite 文件。
-          url: jdbc:sqlite:./data/kset_demo.db
+          # 来源：dynamic-datasource DataSourceProperty.url；含义：主数据源连接地址，默认使用本地 PostgreSQL。
+          url: jdbc:postgresql://127.0.0.1:5432/kset_demo
+          # 来源：dynamic-datasource DataSourceProperty.username；含义：主数据源用户名。
+          username: postgres
+          # 来源：dynamic-datasource DataSourceProperty.password；含义：主数据源密码，仅用于 demo。
+          password: postgres
           # 来源：dynamic-datasource DataSourceProperty.driverClassName；含义：JDBC 驱动类。
-          driver-class-name: org.sqlite.JDBC
+          driver-class-name: org.postgresql.Driver
           # 来源：dynamic-datasource HikariCpConfig；含义：当前数据源 HikariCP 连接池参数。
           # hikari:
           #   pool-name: kset-demo-master-hikari
@@ -24,9 +28,13 @@ spring:
           #   connection-timeout: 30000
         audit:
           # 来源：dynamic-datasource DataSourceProperty.url；含义：审计数据源连接地址。
-          url: jdbc:sqlite:./data/kset_audit.db
+          url: jdbc:postgresql://127.0.0.1:5432/kset_audit
+          # 来源：dynamic-datasource DataSourceProperty.username；含义：审计数据源用户名。
+          username: postgres
+          # 来源：dynamic-datasource DataSourceProperty.password；含义：审计数据源密码，仅用于 demo。
+          password: postgres
           # 来源：dynamic-datasource DataSourceProperty.driverClassName；含义：JDBC 驱动类。
-          driver-class-name: org.sqlite.JDBC
+          driver-class-name: org.postgresql.Driver
 
 # 来源：dynamic-datasource 可选能力。
 # 含义：只有需要高级行为时打开。

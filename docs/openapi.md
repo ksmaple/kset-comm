@@ -12,9 +12,9 @@
 
 kset-demo：
 
-- 单机（8080）：http://localhost:8080/doc.html — `demo-standalone-service`
-- 用户服务（8081）：http://localhost:8081/doc.html — Cloud 示例
-- 订单服务（8082）：http://localhost:8082/doc.html — Cloud 示例
+- 单机（18081）：http://localhost:18081/doc.html — `demo-standalone-service`
+- 用户服务（18082）：http://localhost:18082/doc.html — Cloud 示例
+- 订单服务（18083）：http://localhost:18083/doc.html — Cloud 示例
 
 > Gateway 不使用 `starter-web`，无 Knife4j 页面；文档在各业务微服务上查看。
 

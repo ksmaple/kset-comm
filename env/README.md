@@ -30,7 +30,7 @@ env/
 | 组件 | 镜像变量 | 默认镜像 | 默认端口 | 数据目录 | 说明 |
 |------|----------|----------|----------|----------|------|
 | Nacos | `NACOS_IMAGE` | `nacos/nacos-server:v3.2.0` | `8080`、`8848`、`9848`、`9849` | `/data/nacos/` | 注册发现与配置中心；3.x 控制台端口为 `8080` |
-| PostgreSQL | `POSTGRES_IMAGE` | `pgvector/pgvector:0.8.2-pg17` | `5432` | `/data/postgres/` | PostgreSQL 17 + pgvector，可选数据库，demo 默认 SQLite |
+| PostgreSQL | `POSTGRES_IMAGE` | `pgvector/pgvector:0.8.2-pg17` | `5432` | `/data/postgres/` | PostgreSQL 17 + pgvector，demo 默认数据库 |
 | Redis | `REDIS_IMAGE` | `redis:7.4.9-alpine` | `6379` | `/data/redis/` | 缓存、锁、排行榜 |
 | RocketMQ | `ROCKETMQ_IMAGE` | `apache/rocketmq:5.5.0` | `9876`、`10911`、`10909`、`8081`、`18080` | `/data/rocketmq/` | MQ 标准组件；开启 Proxy，应用侧 v5 client 使用 `8081` |
 | CAT MySQL | `CAT_MYSQL_IMAGE` | `mysql:5.7.37` | `3307` | `/data/cat/mysql/` | CAT Server 内置数据库，跟随 CAT 服务端兼容性暂不升级 |

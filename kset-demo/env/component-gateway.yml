@@ -30,8 +30,8 @@
 #       default-filters:
 #         - StripPrefix=1
 #       routes:
-#         - id: demo-user-service
-#           uri: lb://demo-user-service
+#         - id: demo-micro-service-users
+#           uri: lb://demo-micro-service
 #           predicates:
 #             - Path=/user/**
 #           filters:

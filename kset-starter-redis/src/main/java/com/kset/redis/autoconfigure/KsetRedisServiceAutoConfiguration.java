@@ -10,6 +10,7 @@ import com.kset.redis.lock.internal.KsetRedissonLockProvider;
 import com.kset.redis.support.KsetRedisBootstrap;
 import com.kset.redis.support.KsetRedisNamedSources;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
-@ConditionalOnBean(RedisTemplate.class)
 public class KsetRedisServiceAutoConfiguration {
 
     @Bean
@@ -42,8 +42,9 @@ public class KsetRedisServiceAutoConfiguration {
 
     @Bean(name = {"ksetRedisService"})
     @Primary
+    @ConditionalOnBean(name = "ksetRedisTemplate")
     @ConditionalOnMissingBean(name = "ksetRedisService")
-    public KsetRedisService ksetRedisService(RedisTemplate<String, Object> redisTemplate,
+    public KsetRedisService ksetRedisService(@Qualifier("ksetRedisTemplate") RedisTemplate<String, Object> redisTemplate,
                                              KsetRedisTtlPolicy ttlPolicy,
                                              KsetRedisStreamSettings streamSettings,
                                              Environment environment) {
@@ -64,6 +65,7 @@ public class KsetRedisServiceAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(KsetRedisService.class)
     public KsetRedisBootstrap ksetRedisBootstrap(KsetRedisRegistry registry,
                                                  KsetRedisService ksetRedisService,
                                                  ObjectProvider<KsetRedisNamedSources> namedSources,

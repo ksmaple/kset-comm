@@ -22,10 +22,12 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class RequestLoggingFilter extends OncePerRequestFilter {
 
+    private static final int REQUEST_BODY_CACHE_LIMIT = 64 * 1024;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request, REQUEST_BODY_CACHE_LIMIT);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
         long start = System.currentTimeMillis();
         try {

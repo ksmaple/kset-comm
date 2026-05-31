@@ -32,8 +32,9 @@ spring:
         # config-retry-time: 2000
         # enable-remote-sync-config: false
 
-# 来源：Spring Boot ConfigData。
-# 非必选项：KSet Nacos starter 会追加公共配置；业务同名配置需要时再打开。
-# spring:
-#   config:
-#     import: optional:nacos:${spring.application.name}.yaml
+  # 来源：Spring Boot ConfigData / Spring Cloud Alibaba Nacos Config。
+  # 含义：Nacos Config 要求 spring.config.import 包含 nacos: 条目；optional 表示配置不存在时不阻断启动。
+  config:
+    import:
+      - optional:nacos:kset-common.yaml
+      - optional:nacos:${spring.application.name}.yaml

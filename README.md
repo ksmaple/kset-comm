@@ -219,7 +219,7 @@ mvn dependency:tree -Dverbose | findstr "omitted for conflict"
 | 场景 | 示例工程 | Starter 组合 |
 |------|----------|--------------|
 | **单机** | `kset-demo/demo-standalone-service` | web + monitor + datasource + JDBC driver + redis |
-| **微服务 Cloud** | `demo-user-service` / `demo-order-service` / `demo-gateway` | web + monitor + datasource + JDBC driver (+redis) + nacos + dubbo；网关 gateway + monitor |
+| **微服务 Cloud** | `demo-micro-service` / `demo-gateway` | web + monitor + datasource + JDBC driver + redis + nacos + dubbo；网关 gateway + monitor |
 
 ```xml
 <parent>
@@ -893,18 +893,17 @@ Client → Gateway (X-Gray-Tag) → LoadBalancer (metadata 匹配) → 微服务
 
 详见 [kset-demo/README.md](kset-demo/README.md)。
 
-**单机**（SQLite + Redis）：
+**单机**（PostgreSQL + Redis）：
 
 ```bash
 mvn -pl kset-demo/demo-standalone-service spring-boot:run
-# http://localhost:8080/doc.html
+# http://localhost:18081/doc.html
 ```
 
-**微服务 Cloud**（SQLite + Redis + Nacos）：
+**微服务 Cloud**（PostgreSQL + Redis + Nacos）：
 
 ```bash
-mvn -pl kset-demo/demo-user-service spring-boot:run
-mvn -pl kset-demo/demo-order-service spring-boot:run
+mvn -pl kset-demo/demo-micro-service spring-boot:run
 mvn -pl kset-demo/demo-gateway spring-boot:run
 ```
 

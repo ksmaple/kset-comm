@@ -1,9 +1,9 @@
 package com.kset.redis.config;
 
+import com.kset.redis.codec.KsetFastjsonRedisSerializer;
 import com.kset.redis.key.KsetRedisKeys;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -15,10 +15,15 @@ public final class KsetRedisTemplateFactory {
     }
 
     public static RedisTemplate<String, Object> create(RedisConnectionFactory connectionFactory, String keyPrefix) {
+        return create(connectionFactory, keyPrefix, new KsetFastjsonRedisSerializer());
+    }
+
+    public static RedisTemplate<String, Object> create(RedisConnectionFactory connectionFactory,
+                                                       String keyPrefix,
+                                                       KsetFastjsonRedisSerializer valueSerializer) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
-        GenericJackson2JsonRedisSerializer valueSerializer = new GenericJackson2JsonRedisSerializer();
         StringRedisSerializer keySerializer = prefixingKeySerializer(keyPrefix);
 
         template.setKeySerializer(keySerializer);

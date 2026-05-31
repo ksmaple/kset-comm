@@ -16,9 +16,11 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
- * KSet Redis monitoring helpers. Uses dynamic proxies so Redis components stay unaware of monitor starter wiring.
+ * KSet Redis 监控工具。仅包装 KSet Redis 门面对象，底层 RedisTemplate / RedissonClient 保持原生行为。
  */
 public final class KsetRedisMonitor {
+
+    private static final ThreadLocal<Boolean> ACTIVE = ThreadLocal.withInitial(() -> false);
 
     private KsetRedisMonitor() {
     }
@@ -61,7 +63,11 @@ public final class KsetRedisMonitor {
     }
 
     public static <T> T call(String source, String operation, Callable<T> action) throws Exception {
+        if (Boolean.TRUE.equals(ACTIVE.get())) {
+            return action.call();
+        }
         String txName = source + "." + operation;
+        ACTIVE.set(true);
         try (MonitorTransaction tx = Monitor.newTransaction(MonitorTypes.CACHE, txName)) {
             tx.addData("component", "redis");
             tx.addData("source", source);
@@ -76,6 +82,8 @@ public final class KsetRedisMonitor {
                 Monitor.logError(e, txName);
                 throw e;
             }
+        } finally {
+            ACTIVE.remove();
         }
     }
 

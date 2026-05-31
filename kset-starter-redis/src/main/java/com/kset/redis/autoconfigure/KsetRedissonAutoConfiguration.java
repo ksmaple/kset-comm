@@ -1,10 +1,13 @@
 package com.kset.redis.autoconfigure;
 
 import com.kset.cloud.config.KsetRedisProperties;
+import com.kset.redis.codec.KsetFastjsonRedisSerializer;
 import com.kset.redis.config.KsetRedissonClientFactory;
+import com.kset.redis.config.KsetRedisSerializerConfiguration;
 import com.kset.redis.core.KsetRedisTtlPolicy;
 import com.kset.redis.lock.internal.KsetRedissonLockProvider;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -22,8 +25,10 @@ public class KsetRedissonAutoConfiguration {
     @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingBean(RedissonClient.class)
     public RedissonClient ksetRedissonClient(RedisProperties springRedisProperties,
-                                             KsetRedisProperties ksetRedisProperties) {
-        return KsetRedissonClientFactory.createPrimary(springRedisProperties, ksetRedisProperties);
+                                             KsetRedisProperties ksetRedisProperties,
+                                             @Qualifier(KsetRedisSerializerConfiguration.BEAN_NAME)
+                                             KsetFastjsonRedisSerializer valueSerializer) {
+        return KsetRedissonClientFactory.createPrimary(springRedisProperties, ksetRedisProperties, valueSerializer);
     }
 
     @Bean

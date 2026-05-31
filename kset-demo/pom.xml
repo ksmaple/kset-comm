@@ -17,22 +17,20 @@
     <name>kset-demo</name>
     <description>KSet framework demo applications</description>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.kset</groupId>
-                <artifactId>demo-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <modules>
         <module>demo-standalone-service</module>
-        <module>demo-api</module>
-        <module>demo-user-service</module>
-        <module>demo-order-service</module>
+        <module>demo-micro-service</module>
         <module>demo-gateway</module>
-        <module>demo-test</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

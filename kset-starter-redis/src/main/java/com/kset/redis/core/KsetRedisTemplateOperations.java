@@ -1,7 +1,8 @@
 package com.kset.redis.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson2.JSON;
+import com.kset.redis.codec.KsetFastjsonRedisSerializer;
 import com.kset.common.utils.collection.ListHelper;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
@@ -29,7 +30,6 @@ public class KsetRedisTemplateOperations implements KsetRedisOperations {
 
     private final String sourceName;
     private final RedisTemplate<String, Object> template;
-    private final ObjectMapper objectMapper;
     private final KsetRedisTtlPolicy ttlPolicy;
     private final KsetRedisStreamSettings streamSettings;
 
@@ -41,7 +41,6 @@ public class KsetRedisTemplateOperations implements KsetRedisOperations {
         this.template = Objects.requireNonNull(template, "template");
         this.ttlPolicy = Objects.requireNonNull(ttlPolicy, "ttlPolicy");
         this.streamSettings = Objects.requireNonNull(streamSettings, "streamSettings");
-        this.objectMapper = new ObjectMapper();
     }
 
     public KsetRedisTemplateOperations(RedisTemplate<String, Object> template,
@@ -67,7 +66,7 @@ public class KsetRedisTemplateOperations implements KsetRedisOperations {
         if (raw == null) {
             return null;
         }
-        return objectMapper.convertValue(raw, typeReference);
+        return convert(raw, typeReference);
     }
 
     @Override
@@ -496,14 +495,58 @@ public class KsetRedisTemplateOperations implements KsetRedisOperations {
         if (type.isInstance(raw)) {
             return type.cast(raw);
         }
-        return objectMapper.convertValue(raw, type);
+        if (raw instanceof String text) {
+            return convertText(text, type);
+        }
+        return JSON.parseObject(JSON.toJSONString(raw), type);
     }
 
     private <T> T convert(Object raw, TypeReference<T> typeReference) {
         if (raw == null || typeReference == null) {
             return null;
         }
-        return objectMapper.convertValue(raw, typeReference);
+        if (raw instanceof String text) {
+            return JSON.parseObject(text, typeReference.getType());
+        }
+        return JSON.parseObject(JSON.toJSONString(raw), typeReference.getType());
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static <T> T convertText(String text, Class<T> type) {
+        if (String.class == type) {
+            return type.cast(text);
+        }
+        if (Integer.class == type || int.class == type) {
+            return (T) Integer.valueOf(text);
+        }
+        if (Long.class == type || long.class == type) {
+            return (T) Long.valueOf(text);
+        }
+        if (Double.class == type || double.class == type) {
+            return (T) Double.valueOf(text);
+        }
+        if (Float.class == type || float.class == type) {
+            return (T) Float.valueOf(text);
+        }
+        if (Short.class == type || short.class == type) {
+            return (T) Short.valueOf(text);
+        }
+        if (Byte.class == type || byte.class == type) {
+            return (T) Byte.valueOf(text);
+        }
+        if (Boolean.class == type || boolean.class == type) {
+            return (T) Boolean.valueOf(text);
+        }
+        if (Character.class == type || char.class == type) {
+            return (T) Character.valueOf(text.charAt(0));
+        }
+        if (Enum.class.isAssignableFrom(type)) {
+            return (T) Enum.valueOf((Class<Enum>) type.asSubclass(Enum.class), text);
+        }
+        if (KsetFastjsonRedisSerializer.isBasicType(type)) {
+            return JSON.parseObject(text, type);
+        }
+        return JSON.parseObject(text, type);
     }
 
     private <T> Map<String, T> toMultiGetMap(Collection<String> keys, List<Object> values, Class<T> type) {

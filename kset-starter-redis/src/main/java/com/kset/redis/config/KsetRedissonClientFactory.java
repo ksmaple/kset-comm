@@ -1,7 +1,8 @@
 package com.kset.redis.config;
 
 import com.kset.cloud.config.KsetRedisProperties;
-import com.kset.redis.codec.KsetRedisJacksonCodec;
+import com.kset.redis.codec.KsetFastjsonRedisSerializer;
+import com.kset.redis.codec.KsetFastjsonRedissonCodec;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.ClusterServersConfig;
@@ -20,8 +21,10 @@ public final class KsetRedissonClientFactory {
     private KsetRedissonClientFactory() {
     }
 
-    public static RedissonClient createPrimary(RedisProperties springRedis, KsetRedisProperties ksetRedis) {
-        Config config = baseConfig(ksetRedis);
+    public static RedissonClient createPrimary(RedisProperties springRedis,
+                                               KsetRedisProperties ksetRedis,
+                                               KsetFastjsonRedisSerializer valueSerializer) {
+        Config config = baseConfig(ksetRedis, valueSerializer);
         if (springRedis.getCluster() != null && springRedis.getCluster().getNodes() != null
                 && !springRedis.getCluster().getNodes().isEmpty()) {
             ClusterServersConfig cluster = config.useClusterServers();
@@ -39,8 +42,10 @@ public final class KsetRedissonClientFactory {
     }
 
     public static RedissonClient createFromSource(
-            KsetRedisProperties.RedisSourceProperties source, KsetRedisProperties ksetRedis) {
-        Config config = baseConfig(ksetRedis);
+            KsetRedisProperties.RedisSourceProperties source,
+            KsetRedisProperties ksetRedis,
+            KsetFastjsonRedisSerializer valueSerializer) {
+        Config config = baseConfig(ksetRedis, valueSerializer);
         if (source.isClusterMode()) {
             ClusterServersConfig cluster = config.useClusterServers();
             cluster.addNodeAddress(toAddresses(source.getCluster().getNodes()));
@@ -54,9 +59,9 @@ public final class KsetRedissonClientFactory {
         return Redisson.create(config);
     }
 
-    private static Config baseConfig(KsetRedisProperties ksetRedis) {
+    private static Config baseConfig(KsetRedisProperties ksetRedis, KsetFastjsonRedisSerializer valueSerializer) {
         Config config = new Config();
-        config.setCodec(new KsetRedisJacksonCodec());
+        config.setCodec(new KsetFastjsonRedissonCodec(valueSerializer));
         KsetRedisProperties.Redisson redisson = ksetRedis.getRedisson();
         config.setThreads(redisson.getThreads());
         config.setNettyThreads(redisson.getNettyThreads());

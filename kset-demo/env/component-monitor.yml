@@ -28,6 +28,7 @@ kset:
     # http-client:
     #   enabled: true
     # redis:
+    #   # 来源：KSet Redis Monitor；含义：是否监控 KSet Redis 门面、KSet Lock、KSet Rank。
     #   enabled: true
     # thread-pool:
     #   enabled: true
