@@ -22,6 +22,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- 根聚合 POM 本身不发布 -->
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <modules>

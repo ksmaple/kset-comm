@@ -10,14 +10,23 @@ public final class DubboRouteRuleHolder {
 
     private static final CopyOnWriteArrayList<RouteCondition> CONDITIONS = new CopyOnWriteArrayList<>();
     private static volatile String metadataKey = "version";
+    private static volatile String defaultTag = "stable";
+
+    static {
+        resetToLocalDefault();
+    }
 
     private DubboRouteRuleHolder() {
     }
 
-    public static void setMetadataKey(String key) {
+    public static void configureLocalDefault(String key, String tag) {
         if (key != null && !key.isBlank()) {
             metadataKey = key;
         }
+        if (tag != null && !tag.isBlank()) {
+            defaultTag = tag;
+        }
+        resetToLocalDefault();
     }
 
     public static String getMetadataKey() {
@@ -26,9 +35,24 @@ public final class DubboRouteRuleHolder {
 
     public static void update(List<RouteCondition> conditions) {
         CONDITIONS.clear();
-        if (conditions != null) {
-            CONDITIONS.addAll(conditions);
+        if (conditions == null || conditions.isEmpty()) {
+            resetToLocalDefault();
+            return;
         }
+        conditions.stream()
+                .filter(DubboRouteRuleHolder::isValid)
+                .forEach(CONDITIONS::add);
+        if (CONDITIONS.isEmpty()) {
+            resetToLocalDefault();
+        }
+    }
+
+    public static void resetToLocalDefault() {
+        CONDITIONS.clear();
+        RouteCondition condition = new RouteCondition();
+        condition.setTag(defaultTag);
+        condition.setWeight(100);
+        CONDITIONS.add(condition);
     }
 
     public static List<RouteCondition> getConditions() {
@@ -66,5 +90,12 @@ public final class DubboRouteRuleHolder {
         public void setConditions(List<RouteCondition> conditions) {
             this.conditions = conditions;
         }
+    }
+
+    private static boolean isValid(RouteCondition condition) {
+        return condition != null
+                && condition.getTag() != null
+                && !condition.getTag().isBlank()
+                && condition.getWeight() > 0;
     }
 }

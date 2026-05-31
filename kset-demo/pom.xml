@@ -17,6 +17,10 @@
     <name>kset-demo</name>
     <description>KSet framework demo applications</description>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <modules>
         <module>demo-standalone-service</module>
         <module>demo-micro-service</module>

@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.kset.demo.standalone.mapper")
+@MapperScan("com.kset.demo.standalone.infrastructure.persistence")
 public class DemoStandaloneApplication {
 
     public static void main(String[] args) {

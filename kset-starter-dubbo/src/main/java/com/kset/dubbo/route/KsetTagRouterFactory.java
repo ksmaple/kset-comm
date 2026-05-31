@@ -1,7 +1,5 @@
 package com.kset.dubbo.route;
 
-import com.kset.common.monitor.Monitor;
-import com.kset.common.trace.TraceHeaders;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
@@ -37,23 +35,15 @@ public class KsetTagRouterFactory implements RouterFactory {
                 return new RouterResult<>(invokers);
             }
 
-            String grayTag = resolveGrayTag(invocation);
             String metadataKey = url.getParameter("kset.gray.metadata.key", DubboRouteRuleHolder.getMetadataKey());
-
-            List<Invoker<T>> matched = invokers.stream()
-                    .filter(inv -> grayTag.equals(inv.getUrl().getParameter(metadataKey)))
-                    .collect(Collectors.toList());
-
+            List<Invoker<T>> matched = filterByRouteRules(invokers, metadataKey);
             if (matched.isEmpty()) {
-                matched = filterByRouteRules(invokers);
-            }
-            if (matched.isEmpty()) {
-                matched = invokers;
+                return new RouterResult<>(invokers);
             }
             return new RouterResult<>(matched);
         }
 
-        private <T> List<Invoker<T>> filterByRouteRules(List<Invoker<T>> invokers) {
+        private <T> List<Invoker<T>> filterByRouteRules(List<Invoker<T>> invokers, String metadataKey) {
             List<DubboRouteRuleHolder.RouteCondition> conditions = DubboRouteRuleHolder.getConditions();
             if (conditions.isEmpty()) {
                 return List.of();
@@ -72,18 +62,9 @@ public class KsetTagRouterFactory implements RouterFactory {
             }
 
             String tag = selectedTag;
-            String metadataKey = DubboRouteRuleHolder.getMetadataKey();
             return invokers.stream()
                     .filter(inv -> tag.equals(inv.getUrl().getParameter(metadataKey)))
                     .collect(Collectors.toList());
-        }
-
-        private String resolveGrayTag(Invocation invocation) {
-            String grayTag = invocation.getAttachment(TraceHeaders.GRAY_TAG_KEY);
-            if (grayTag != null && !grayTag.isBlank()) {
-                return grayTag;
-            }
-            return Monitor.currentGrayTag().orElse("stable");
         }
 
         @Override

@@ -30,7 +30,9 @@ public class KsetDubboRouteBootstrapConfiguration {
             KsetCloudProperties properties,
             NacosConfigConvention convention,
             Environment environment) {
-        DubboRouteRuleHolder.setMetadataKey(properties.getLoadbalancer().getMetadataKey());
+        DubboRouteRuleHolder.configureLocalDefault(
+                properties.getDubbo().getGrayMetadataKey(),
+                properties.getDubbo().getDefaultGrayTag());
         return new DubboRouteNacosBootstrap(configServiceProvider, routeRuleProvider, convention, environment);
     }
 

@@ -85,6 +85,11 @@
 
         <!-- 框架库单元测试由 kset-demo 的服务模块承载；库模块默认跳过 surefire -->
         <kset.skipModuleTests>true</kset.skipModuleTests>
+
+        <!-- Nexus 发布（-Pnexus；可用 -Dkset.nexus.url 覆盖） -->
+        <kset.nexus.url>http://192.168.53.5:8081</kset.nexus.url>
+        <kset.nexus.release.repository>maven-releases</kset.nexus.release.repository>
+        <kset.nexus.snapshot.repository>maven-snapshots</kset.nexus.snapshot.repository>
     </properties>
 
     <dependencyManagement>
@@ -609,4 +614,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>nexus</id>
+            <distributionManagement>
+                <repository>
+                    <id>kset-nexus-releases</id>
+                    <name>KSet Nexus Releases</name>
+                    <url>${kset.nexus.url}/repository/${kset.nexus.release.repository}/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>kset-nexus-snapshots</id>
+                    <name>KSet Nexus Snapshots</name>
+                    <url>${kset.nexus.url}/repository/${kset.nexus.snapshot.repository}/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

@@ -19,14 +19,14 @@ public class DubboRouteRuleProvider implements CloudRuleProvider {
     @Override
     public void onRuleChanged(String jsonContent) {
         if (jsonContent == null || jsonContent.isBlank()) {
-            DubboRouteRuleHolder.update(null);
+            DubboRouteRuleHolder.resetToLocalDefault();
             return;
         }
         try {
             DubboRouteRuleHolder.RouteRuleConfig config =
                     objectMapper.readValue(jsonContent, DubboRouteRuleHolder.RouteRuleConfig.class);
             DubboRouteRuleHolder.update(config.getConditions());
-            log.info("Dubbo route rules updated, conditions={}", config.getConditions().size());
+            log.info("Dubbo route rules updated, conditions={}", DubboRouteRuleHolder.getConditions().size());
         } catch (Exception e) {
             log.warn("Failed to parse Dubbo route rules: {}", e.getMessage());
         }
