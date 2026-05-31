@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.kset.demo")
 @EnableDubbo
-@MapperScan({"com.kset.demo.user.mapper", "com.kset.demo.order.mapper"})
+@MapperScan({
+        "com.kset.demo.user.infrastructure.persistence",
+        "com.kset.demo.order.infrastructure.persistence"
+})
 public class DemoMicroApplication {
 
     public static void main(String[] args) {
